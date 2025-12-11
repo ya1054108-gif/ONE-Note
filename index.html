@@ -2,464 +2,504 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>臨床裝置完全筆記 — ECMO · IABP · CVC · A-line · Swan-Ganz · PICC</title>
-<meta name="description" content="極為詳細的 ICU / 術中裝置筆記：含解剖示意圖、位置、作用、適應症、禁忌症與併發症。" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+<title>ICU 臨床裝置速查手冊 (Taiwan Edition)</title>
+<meta name="description" content="台灣臨床專用：ECMO, IABP, CVC, PICC 等裝置護理重點與參數設定。" />
 <style>
 :root{
-  /* 亮色模式變數 */
-  --bg: #f4f7fb; 
-  --card: #ffffff; 
-  --text-main: #0f172a; /* 深色字 */
+  /* 亮色模式 Theme */
+  --bg: #f8fafc; 
+  --card-bg: #ffffff; 
+  --text-main: #1e293b; 
   --text-muted: #64748b; 
-  --accent: #0b6fff; 
+  --accent: #0284c7; /* 醫師袍藍 */
+  --accent-light: #e0f2fe;
   --danger: #e11d48; 
+  --warning: #d97706;
   --ok: #059669;
-  --side-w: 250px; 
-  --header-h: 64px;
-  --border: rgba(0,0,0,0.08);
+  --border: #e2e8f0;
+  --header-h: 60px;
+  --sidebar-w: 260px;
+  --radius: 12px;
 }
 
 [data-theme="dark"]{
-  /* 深色模式變數 */
+  /* 深色模式 Theme */
   --bg: #0f172a; 
-  --card: #1e293b; 
-  --text-main: #f1f5f9; /* 淺色字 (修正重點) */
+  --card-bg: #1e293b; 
+  --text-main: #f1f5f9; 
   --text-muted: #94a3b8; 
-  --accent: #60a5fa; /* 變亮的藍色 */
-  --danger: #fb7185; /* 變亮的紅色 */
+  --accent: #38bdf8; 
+  --accent-light: rgba(56, 189, 248, 0.1);
+  --danger: #fb7185; 
+  --warning: #fbbf24;
   --ok: #34d399;
-  --border: rgba(255,255,255,0.1);
+  --border: #334155;
 }
 
-*{box-sizing:border-box}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 
 body{
-  font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-  margin:0; 
-  background: var(--bg); 
-  color: var(--text-main); /* 讓文字顏色跟隨變數 */
-  height:100vh; 
-  overflow:hidden;
-  transition: background 0.3s, color 0.3s; /* 平滑切換效果 */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft JhengHei", Helvetica, Arial, sans-serif; 
+  margin:0; background: var(--bg); color: var(--text-main); 
+  height:100vh; overflow:hidden;
+  transition: background 0.3s ease;
 }
 
-/* Header */
+/* --- Header --- */
 .header{
   height: var(--header-h); padding: 0 16px;
-  display:flex; align-items:center; gap:16px; 
-  background: var(--card); border-bottom: 1px solid var(--border);
+  display:flex; align-items:center; gap:12px; 
+  background: var(--card-bg); border-bottom: 1px solid var(--border);
   position:fixed; top:0; left:0; right:0; z-index:100;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
-.logo{
-  width:36px;height:36px;border-radius:8px;
-  background:linear-gradient(135deg,var(--accent),#3b82f6);
-  display:flex;align-items:center;justify-content:center;
-  color:white;font-weight:800;font-size:14px;flex-shrink:0
+.logo-area{display:flex;align-items:center;gap:10px;cursor:pointer}
+.logo-icon{
+  width:32px;height:32px;border-radius:8px;
+  background:linear-gradient(135deg,var(--accent),#2563eb);
+  color:white;display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:12px;
 }
-.title-group{display:flex; flex-direction:column;}
-.title{font-size:16px; margin:0; font-weight:700; color:var(--text-main)}
-.subtitle{color:var(--text-muted); font-size:12px; margin:0;}
+.app-title{font-size:16px; font-weight:700; color:var(--text-main); line-height:1.2}
+.app-subtitle{font-size:11px; color:var(--text-muted); font-weight:400}
+.header-actions{margin-left:auto; display:flex; gap:8px}
 
-.controls{margin-left:auto;display:flex;gap:8px;}
-.btn{background:var(--accent);color:white;padding:6px 12px;border-radius:6px;border:none;cursor:pointer;font-weight:600;font-size:13px;}
-.btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--border)}
-.btn.ghost:hover{background:rgba(11,111,255,0.05)}
-.btn.icon-btn{padding:8px; display:flex; align-items:center; justify-content:center; color:var(--text-main)}
+.btn{
+  background:var(--accent); color:white; padding:6px 12px; 
+  border-radius:6px; border:none; cursor:pointer; font-weight:600; font-size:13px;
+  display:inline-flex; align-items:center; justify-content:center; gap:4px;
+  transition: all 0.2s active;
+}
+.btn:active{transform:scale(0.96)}
+.btn.ghost{background:transparent; color:var(--text-main); border:1px solid var(--border)}
+.btn.ghost:hover{background:var(--accent-light); color:var(--accent); border-color:var(--accent)}
+.icon-btn{padding:8px; background:transparent; color:var(--text-main); border:none; cursor:pointer; border-radius:50%}
+.icon-btn:hover{background:var(--accent-light); color:var(--accent)}
 
-/* Layout */
-.container{
-  display:grid;
-  grid-template-columns: var(--side-w) 1fr;
-  height: calc(100vh - var(--header-h));
+/* --- Layout --- */
+.main-container{
   margin-top: var(--header-h);
-  transition: grid-template-columns 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-body.menu-collapsed .container { grid-template-columns: 0px 1fr; }
-
-/* Sidebar */
-nav.side{
-  background:var(--card); 
-  border-right:1px solid var(--border);
-  overflow-y:auto; padding:16px;
-  width: 100%; transition: opacity 0.2s;
-}
-body.menu-collapsed nav.side { opacity: 0; pointer-events: none; }
-
-nav.side ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:4px}
-nav.side a{
-  display:block;padding:8px 12px;border-radius:6px;
-  color:var(--text-muted); text-decoration:none;
-  font-weight:500; font-size:14px; transition:0.2s
-}
-nav.side a:hover{background:var(--bg); color:var(--accent)}
-nav.side a.active{background:var(--accent); color:#fff; font-weight:600}
-
-/* Main Content */
-main{
-  padding:24px 40px; 
-  background:var(--bg); /* 確保背景色跟隨變數 */
-  overflow-y:auto; 
+  height: calc(100vh - var(--header-h));
+  position: relative;
+  overflow: hidden;
 }
 
-.page{display:none; max-width: 900px; margin: 0 auto; padding-bottom: 60px;}
-.page.active{display:block; animation: fadeIn 0.4s ease}
-@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-
-/* Cards & Sections */
-h2{color:var(--text-main); margin-top:0}
-.card{
-  background:var(--card);
-  padding:16px; border-radius:12px;
-  border:1px solid var(--border);
-  margin-bottom:16px;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+/* --- Sidebar (Navigation) --- */
+.sidebar-overlay{
+  position:fixed; top:0; left:0; right:0; bottom:0; z-index:140;
+  background:rgba(0,0,0,0.5); display:none; opacity:0; transition:opacity 0.3s;
 }
-.col2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.section-title{
-  font-size: 13px; font-weight: 700; 
-  color: var(--accent); margin-bottom: 8px;
-  text-transform:uppercase; letter-spacing:0.5px;
-}
-.text{font-size:15px; line-height:1.6; color:var(--text-main)}
-ul{padding-left:20px; color:var(--text-main)}
+.sidebar-overlay.open{display:block; opacity:1}
 
-/* Diagram Box (SVG) */
-.diagram-box{
-  background: var(--card); border-radius: 12px; padding: 10px; 
-  display: flex; justify-content: center; align-items: center; margin-bottom: 20px;
-  border: 1px dashed var(--border); height: 180px;
-  color: var(--text-main); /* 關鍵：讓 SVG 內的 currentColor 讀取這個顏色 */
+.sidebar{
+  position:fixed; top:0; bottom:0; left:0; z-index:150;
+  width: var(--sidebar-w); background: var(--card-bg);
+  border-right: 1px solid var(--border);
+  transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+  display:flex; flex-direction:column;
+  box-shadow: 4px 0 24px rgba(0,0,0,0.1);
 }
-.diagram-box svg{max-height:100%; width:100%;}
+.sidebar.open{transform: translateX(0)}
 
-/* Inputs & Buttons */
-.search{
-  width:100%;padding:8px 12px;border-radius:6px;
-  border:1px solid var(--border); margin-bottom:16px;
-  background:var(--bg); color:var(--text-main);
+.sidebar-header{height:var(--header-h); border-bottom:1px solid var(--border); display:flex; align-items:center; padding:0 16px; justify-content:space-between}
+.sidebar-scroll{overflow-y:auto; flex:1; padding:16px}
+.nav-item{
+  display:block; padding:10px 12px; border-radius:8px;
+  color:var(--text-muted); text-decoration:none; font-weight:500; font-size:15px;
+  margin-bottom:4px; transition:0.2s;
 }
-.footerActions{display:flex;gap:8px;margin-top:30px;padding-top:20px;border-top:1px solid var(--border)}
+.nav-item:hover{background:var(--bg); color:var(--text-main)}
+.nav-item.active{background:var(--accent-light); color:var(--accent); font-weight:600}
 
-/* Mobile */
-@media (max-width: 768px) {
-  .subtitle, #exportBtn {display:none}
-  .container { display: block; }
-  nav.side {
-    position: absolute; top: 0; bottom: 0; left: 0; z-index: 50;
-    width: 240px; transform: translateX(0); transition: transform 0.3s;
-    box-shadow: 4px 0 20px rgba(0,0,0,0.2);
-  }
-  body.menu-collapsed nav.side { transform: translateX(-100%); opacity: 1; }
-  main{padding: 16px;}
-  .col2{grid-template-columns:1fr}
+/* --- Content Views --- */
+#view-container{
+  height: 100%; overflow-y: auto; padding: 20px;
+  scroll-behavior: smooth;
+}
+
+/* 1. Home Grid View */
+.home-grid{
+  display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:16px;
+  max-width:1000px; margin:0 auto;
+  animation: fadeUp 0.4s ease;
+}
+.device-card{
+  background: var(--card-bg); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 20px;
+  cursor: pointer; position: relative; overflow: hidden;
+  transition: all 0.2s; display:flex; flex-direction:column;
+}
+.device-card:hover{
+  transform: translateY(-4px); 
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  border-color: var(--accent);
+}
+.card-icon-wrap{
+  width: 50px; height: 50px; background: var(--accent-light); 
+  border-radius: 10px; color: var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 12px;
+}
+.card-title{font-size:18px; font-weight:700; margin:0 0 6px 0; color:var(--text-main)}
+.card-desc{font-size:13px; color:var(--text-muted); line-height:1.5; flex-grow:1}
+.card-arrow{margin-top:16px; font-size:13px; font-weight:600; color:var(--accent); display:flex; align-items:center; gap:4px}
+
+/* 2. Detail Page View */
+.detail-page{
+  display:none; max-width: 800px; margin: 0 auto; padding-bottom: 60px;
+  animation: fadeIn 0.3s ease;
+}
+.detail-page.active{display:block}
+
+.detail-header{margin-bottom:24px; display:flex; flex-direction:column; gap:8px}
+.detail-title{font-size:26px; font-weight:800; margin:0; color:var(--text-main)}
+.detail-subtitle{font-size:14px; color:var(--accent); background:var(--accent-light); display:inline-block; padding:4px 8px; border-radius:6px; font-weight:600; align-self:flex-start}
+
+.diagram-container{
+  background: var(--card-bg); border: 1px dashed var(--border); 
+  border-radius: var(--radius); padding: 20px; height: 180px;
+  display:flex; justify-content:center; margin-bottom: 24px;
+}
+.diagram-container svg{width:100%; height:100%; color:var(--text-main)}
+
+/* Content Blocks */
+.info-block{
+  background: var(--card-bg); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 20px; margin-bottom: 16px;
+}
+.block-title{
+  font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;
+  font-weight: 700; color: var(--text-muted); margin-bottom: 10px;
+  display: flex; align-items: center; gap: 8px;
+}
+.block-title.red{color:var(--danger)}
+.block-title.green{color:var(--ok)}
+.block-content{font-size: 15px; line-height: 1.7; color: var(--text-main);}
+
+/* List Styles */
+ul{margin:0; padding-left:20px}
+li{margin-bottom:6px}
+b{color:var(--text-main); font-weight:700}
+
+/* Utility */
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.hidden{display:none}
+
+/* Mobile Responsive */
+@media (max-width: 600px){
+  .header{padding:0 12px}
+  .app-title{font-size:15px}
+  .app-subtitle{display:none} /* 手機不顯示副標題 */
+  .home-grid{grid-template-columns: 1fr}
+  #view-container{padding:16px}
+  .detail-title{font-size:22px}
 }
 </style>
 </head>
-<body class="">
+<body>
 
-<div class="header">
-  <button id="menuToggle" class="btn icon-btn ghost" title="選單">
-    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+<!-- Header -->
+<header class="header">
+  <button class="icon-btn" id="menuBtn">
+    <svg width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
   </button>
-  <div class="logo">ICU</div>
-  <div class="title-group">
-    <h1 class="title">臨床裝置筆記</h1>
-    <div class="subtitle">ECMO · IABP · CVC · Swan-Ganz · PICC</div>
+  
+  <div class="logo-area" onclick="goHome()">
+    <div class="logo-icon">ICU</div>
+    <div>
+      <div class="app-title">臨床裝置速查</div>
+      <div class="app-subtitle">Taiwan Clinical Guide</div>
+    </div>
   </div>
-  <div class="controls">
-    <button id="toggleTheme" class="btn ghost small">◐</button>
-    <button id="printBtn" class="btn ghost small">列印</button>
-    <button id="exportBtn" class="btn small">下載</button>
+
+  <div class="header-actions">
+    <button class="icon-btn" id="themeBtn" title="切換深色/亮色">
+      <svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    </button>
   </div>
-</div>
+</header>
 
-<div class="container">
-  <nav class="side">
-    <input id="menuFilter" class="search" placeholder="篩選..." />
-    <ul id="menuList"></ul>
-  </nav>
+<!-- Sidebar -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <span style="font-weight:700;color:var(--text-main)">裝置目錄</span>
+    <button class="icon-btn" id="closeSidebar">✕</button>
+  </div>
+  <div class="sidebar-scroll" id="sidebarList">
+    <!-- Items Injected Here -->
+  </div>
+  <div style="padding:16px; border-top:1px solid var(--border); font-size:12px; color:var(--text-muted)">
+    Ver 2025.12<br>Designed for Taiwan ICU
+  </div>
+</aside>
 
-  <main id="mainContent">
-    <!-- Pages go here -->
-  </main>
+<!-- Main Area -->
+<div class="main-container">
+  <div id="view-container">
+    <!-- Views will be injected here: Either Home Grid or Detail Page -->
+  </div>
 </div>
 
 <script>
-// --- SVG Generators (Updated for Dark Mode) ---
-// 使用 CSS 變數 (var(--accent), var(--danger)) 讓線條顏色在深色模式下自動變亮
-function getDiagram(type) {
-  let inner = '';
-  const accent = 'var(--accent)';
-  const danger = 'var(--danger)';
-  const txtColor = 'currentColor'; // 文字顏色自動跟隨父層
-
-  switch(type) {
-    case 'ecmo':
-      inner = `
-        <text x="10" y="20" font-size="10" fill="${txtColor}" opacity="0.7">Venous Drain</text>
-        <path d="M30 30 L30 80 Q30 90 50 90 L100 90" stroke="${accent}" stroke-width="4" fill="none"/>
-        <rect x="90" y="75" width="40" height="30" rx="4" fill="${accent}" opacity="0.2" stroke="${accent}"/>
-        <text x="100" y="93" font-size="8" fill="${txtColor}">Pump</text>
-        <path d="M130 90 L170 90 Q190 90 190 80 L190 30" stroke="${danger}" stroke-width="4" fill="none"/>
-        <text x="160" y="20" font-size="10" fill="${txtColor}" opacity="0.7">Return</text>
-        <path d="M110 50 L115 60 L125 40" stroke="${txtColor}" stroke-width="1" opacity="0.5" fill="none"/>
-      `; break;
-    case 'iabp':
-      inner = `
-        <path d="M80 10 Q120 10 120 100" stroke="${danger}" stroke-width="14" opacity="0.15" fill="none"/>
-        <rect x="115" y="40" width="10" height="40" rx="5" fill="#f59e0b" opacity="0.9"/>
-        <line x1="120" y1="80" x2="120" y2="150" stroke="${txtColor}" stroke-width="2" opacity="0.5"/>
-        <text x="135" y="60" font-size="10" fill="#f59e0b" font-weight="bold">Balloon</text>
-        <text x="50" y="30" font-size="10" fill="${txtColor}" opacity="0.6">Aorta</text>
-      `; break;
-    case 'cvc':
-    case 'hickman':
-    case 'picc':
-    case 'porta':
-      let label = type.toUpperCase();
-      let path = (type==='picc') ? `M10 60 Q60 60 80 40 L100 30` : (type==='porta' ? `M40 50 L60 40 L100 30` : `M60 10 L60 30 L100 30`);
-      inner = `
-        <path d="M100 10 L100 90" stroke="${accent}" stroke-width="16" opacity="0.15"/>
-        <text x="112" y="50" font-size="10" fill="${txtColor}" opacity="0.6">SVC</text>
-        <path d="${path}" stroke="#eab308" stroke-width="3" fill="none"/>
-        <circle cx="${type==='porta'?40: (type==='picc'?10:60)}" cy="${type==='porta'?50: (type==='picc'?60:10)}" r="4" fill="#eab308"/>
-        <text x="10" y="90" font-size="12" fill="${txtColor}" font-weight="bold">${label}</text>
-      `; break;
-    case 'aline':
-      inner = `
-        <path d="M10 50 L190 50" stroke="${danger}" stroke-width="12" opacity="0.15"/>
-        <path d="M50 20 L70 50" stroke="${accent}" stroke-width="2" fill="none"/>
-        <text x="40" y="15" font-size="10" fill="${txtColor}">Cannula</text>
-        <path d="M120 30 L130 50 L140 20 L150 60 L160 50 L180 50" stroke="${danger}" stroke-width="2" fill="none"/>
-        <text x="120" y="80" font-size="10" fill="${txtColor}">Arterial BP</text>
-      `; break;
-    case 'swan':
-      inner = `
-        <path d="M10 50 Q50 20 90 50 T170 50" stroke="${accent}" stroke-width="12" opacity="0.15" fill="none"/>
-        <path d="M10 60 Q50 30 90 60 T160 60" stroke="#eab308" stroke-width="3" fill="none" stroke-dasharray="4 2"/>
-        <circle cx="160" cy="60" r="5" fill="#eab308" opacity="0.8"/>
-        <text x="130" y="85" font-size="10" fill="${txtColor}">Pulmonary A.</text>
-      `; break;
-    default:
-      inner = `<text x="50" y="50" font-size="12" fill="${txtColor}">Device Diagram</text>`;
-  }
-  return `<svg viewBox="0 0 200 100" fill="none" stroke="currentColor" style="width:100%;height:100%">${inner}</svg>`;
-}
-
-// --- Content Data ---
-const pages = [
+// --- Data: 台灣臨床口語化內容 ---
+const devices = [
   {
-    id: 'ecmo', title: 'ECMO (體外膜氧合)', short: 'Life Support (VA/VV)',
+    id: 'ecmo', 
+    title: 'ECMO 葉克膜', 
+    short: 'Extracorporeal Membrane Oxygenation',
+    icon: '<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>', // Heartbeat
     content: {
-      location: '<b>VA</b>：股靜脈(In) → 股動脈(Out)。<br><b>VV</b>：股靜脈(In) → 頸靜脈(Out)。',
-      function: '利用離心幫浦與氧合器取代心肺功能。VA支持心肺；VV僅支持肺臟氧合。',
-      indication: '心因性休克、ECPR、重度ARDS (PaO₂/FiO₂ < 80)、心肌炎。',
-      contraindication: '末期疾病、不可逆腦傷、主動脈剝離(VA禁忌)。',
-      complication: '出血(全身肝素化)、下肢缺血(VA)、溶血、感染。',
-      care: '監測流量、跨膜壓差(Delta P)、末梢灌流。'
+      intro: '俗稱「葉克膜」。簡單說就是人工心肺機。分為 VA (救心+肺) 與 VV (只救肺) 兩種模式。主要靠離心幫浦 (Pump) 與氧合器 (Artificial Lung) 運作。',
+      location: '<b>VA mode</b>：通常由股靜脈 (In) 引流，經股動脈 (Out) 打回身體 (Retrograde flow)。<br><b>VV mode</b>：股靜脈 (In) 引流，頸靜脈 (Out) 打回，或使用 Avalon 雙腔導管。',
+      indication: '<ul><li><b>VA</b>：嚴重心因性休克 (Cardiogenic shock)、IHCA/OHCA 拚 ECPR、心肌炎、無法脫離體外循環 (Weaning failure)。</li><li><b>VV</b>：重度 ARDS (PaO₂/FiO₂ < 80)、嚴重 CO₂ retention、Lung rest。</li></ul>',
+      tips: '<ul><li><b>Flow 流量</b>：成人通常維持 3-5 L/min。</li><li><b>北極熊 (Heater)</b>：注意水溫設定，避免 Hypothermia。</li><li><b>末梢循環</b>：VA mode 務必監測插管側下肢是否有缺血 (DPC 有無通暢)，小心腔室症候群。</li><li><b>抗凝血</b>：Heparin keep ACT 160-200s (依各院 Protocol)。</li></ul>'
     }
   },
   {
-    id: 'iabp', title: 'IABP (主動脈氣球幫浦)', short: 'Counter-pulsation',
+    id: 'iabp', 
+    title: 'IABP 主動脈氣球', 
+    short: 'Intra-Aortic Balloon Pump',
+    icon: '<circle cx="12" cy="12" r="10"/><path d="M8 12h8"/>', // Balloon
     content: {
-      location: '股動脈置入，尖端位於左鎖骨下動脈下方2cm。',
-      function: '舒張期充氣(增冠狀動脈灌流)，收縮期洩氣(降後負荷)。',
-      indication: '心因性休克、AMI併發症、高風險PCI/CABG術前後。',
-      contraindication: '主動脈瓣閉鎖不全(AR)、主動脈剝離、嚴重腹主動脈瘤。',
-      complication: '下肢缺血(最常見)、氣球破裂、血小板低下。',
-      care: '不可彎曲大腿。觀察波形充氣時機。注意足背動脈。'
+      intro: '心臟科的「馬達輔助器」。利用氣球在舒張期充氣、收縮期洩氣 (Counter-pulsation) 來減輕左心室負擔並增加冠狀動脈血流。',
+      location: '由股動脈 (Femoral A.) 打入。Tip 應位於<b>左鎖骨下動脈 (L. Subclavian A.) 開口下方 2cm</b> (約 T2-T3)。CXR 上要看到標記點。',
+      indication: '<ul><li>AMI 併發心因性休克。</li><li>二尖瓣逆流 (MR) 或 VSD 造成的血循不穩。</li><li>高風險 PCI 或 CABG 術前/術後 Support。</li></ul>',
+      tips: '<ul><li><b>Timing</b>：最重要！充氣點在 Dicrotic notch (主動脈瓣關閉時)。</li><li><b>Nursing</b>：插管側大腿<b>絕對不可彎曲</b> (Keep straight)，床頭抬高 < 30度。</li><li><b>觀察</b>：左手橈動脈脈搏 (氣球太高會擋到)、尿量 (氣球太低擋到腎動脈)。</li><li><b>Weaning</b>：從 1:1 改為 1:2 -> 1:3 觀察血壓。</li></ul>'
     }
   },
   {
-    id: 'cvc', title: 'CVC (中心靜脈導管)', short: 'Central Line',
+    id: 'cvc', 
+    title: 'CVC 中心靜脈導管', 
+    short: 'Central Venous Catheter',
+    icon: '<path d="M5 12h14M12 5v14"/>', // Cross
     content: {
-      location: '內頸靜脈(IJV)、鎖骨下(SCV)、股靜脈。尖端位於SVC。',
-      function: '監測CVP、輸注高滲液/昇壓劑、急救輸液。',
-      indication: '周邊血管困難、長期給藥、血循不穩。',
-      contraindication: '穿刺處感染、嚴重凝血異常。',
-      complication: '氣胸(SCV常見)、感染(CLABSI)、心律不整。',
-      care: '無菌換藥(Bundle care)。未用管腔需封管。'
+      intro: '俗稱「Central line」。急救、大量輸液、升壓劑 (Inotropes) 必備通路。由大靜脈直通右心房入口。',
+      location: '常見三處：<b>IJV (內頸)</b>、<b>Subclavian (鎖骨下)</b>、<b>Femoral (股)</b>。Tip 應位於 SVC 與 RA 交界處 (Cavo-atrial junction)。',
+      indication: '<ul><li>周邊血管打不到 (Difficult IV access)。</li><li>需給予升壓劑 (Levophed)、高濃度鉀離子、TPN。</li><li>監測 CVP (雖然現在比較少單看 CVP)。</li></ul>',
+      tips: '<ul><li><b>CXR 確認</b>：On 完一定要照 CXR 確認位置並排除氣胸 (Pneumothorax)。</li><li><b>照護</b>：落實 Bundle Care，換藥需無菌。</li><li><b>Femoral site</b>：雖然好打但感染率最高，且影響病人下床，非必要盡快移除。</li><li><b>Air Embolism</b>：移除時請病人閉氣 (Valsalva)，拔出後油紗布加壓。</li></ul>'
     }
   },
   {
-    id: 'aline', title: 'A-line (動脈導管)', short: 'BP Monitoring',
+    id: 'aline', 
+    title: 'A-line 動脈導管', 
+    short: 'Arterial Line',
+    icon: '<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>', // Waveform
     content: {
-      location: '橈動脈(首選)、股動脈、足背動脈。',
-      function: '連續血壓監測、頻繁抽血(ABG)。',
-      indication: '休克使用昇壓劑、呼吸衰竭需頻繁驗血。',
-      contraindication: 'Allen\'s Test異常、局部感染。',
-      complication: '血栓導致肢體缺血、出血、感染。',
-      care: '加壓袋300mmHg。歸零點：第4肋間腋中線。'
+      intro: '重症病人必備的「即時血壓計」。除了看 Beat-to-beat 血壓，最大好處是可以隨時抽 ABG 不用一直扎針。',
+      location: '首選<b>橈動脈 (Radial)</b>，打之前做 Allen\'s Test。次選股動脈 (Femoral) 或足背動脈 (Dorsalis pedis)。',
+      indication: '<ul><li>血流動力學不穩 (Hemodynamic instability)。</li><li>使用強效 Vasopressor 需精準監測 BP。</li><li>呼吸衰竭需頻繁追蹤 ABG。</li></ul>',
+      tips: '<ul><li><b>歸零 (Zeroing)</b>：Transducer 對齊第 4 肋間腋中線 (Phlebostatic axis)。</li><li><b>加壓袋</b>：Keep 300 mmHg，每小時 flush 保持通暢。</li><li><b>Damping</b>：波形變鈍檢查是否有氣泡、折到或貼牆。</li><li><b>嚴禁給藥</b>：絕對不能從 A-line 給藥，會造成肢體壞死！</li></ul>'
     }
   },
   {
-    id: 'swan', title: 'Swan-Ganz (肺動脈導管)', short: 'Hemodynamics',
+    id: 'picc', 
+    title: 'PICC 人工血管', 
+    short: 'Peripherally Inserted Central Catheter',
+    icon: '<rect x="2" y="6" width="20" height="12" rx="2"/>', // Tube
     content: {
-      location: '經大靜脈 → RA → RV → PA → 嵌塞肺小動脈。',
-      function: '測PCWP(左心前負荷)、CO、SVR。',
-      indication: '不明原因休克、複雜心臟術後。',
-      contraindication: '右心血栓、三尖瓣機械瓣膜。',
-      complication: '肺動脈破裂(致死)、心律不整、導管打結。',
-      care: '氣球不可長時間充氣(防肺梗塞)。'
+      intro: '從手臂打進去的中心靜脈導管。比起 CVC，它沒有氣胸風險，可以留置數週到數個月，適合長期抗生素或化療。',
+      location: '上臂貴要靜脈 (Basilic) 最直最好打。Tip 一樣位於 SVC。',
+      indication: '<ul><li>需長期打抗生素 (> 14天)。</li><li>施打 TPN 或化療藥物。</li><li>周邊血管極差 (Poor vessel condition)。</li></ul>',
+      tips: '<ul><li><b>禁忌</b>：預計做洗腎廔管 (AV fistula) 的手、乳癌淋巴廓清側，<b>不能打 PICC</b>。</li><li><b>量血壓</b>：PICC 那隻手<b>禁止量血壓</b>或抽血。</li><li><b>臂圍</b>：每天測量上臂圍，若腫脹要懷疑 DVT。</li></ul>'
     }
   },
   {
-    id: 'double', title: 'Double-lumen', short: 'Hemodialysis',
+    id: 'swan', 
+    title: 'Swan-Ganz', 
+    short: 'Pulmonary Artery Catheter',
+    icon: '<path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>', // Layers
     content: {
-      location: '短期：IJV/Femoral。長期：隧道式(Perm-Cath)。',
-      function: '高流速通路，專供血液透析(HD)使用。',
-      indication: '急慢性腎衰竭需透析。',
-      contraindication: '同CVC。SVC症候群。',
-      complication: '導管阻塞、感染風險極高。',
-      care: '嚴禁一般輸液(除非急救)。使用高濃度肝素封管。'
+      intro: '心臟科的神器，又稱 PAC。直接伸進肺動脈測量壓力，用來鑑別休克原因 (心因性 vs 分布性) 與測量 Cardiac Output。',
+      location: '經由 Sheath 放入，一路飄：RA -> RV -> PA -> PCWP (Wedge)。',
+      indication: '<ul><li>複雜的心臟手術術後 (Post-CABG/Valve)。</li><li>不明原因的休克或肺水腫。</li><li>肺高壓 (Pulmonary Hypertension) 評估。</li></ul>',
+      tips: '<ul><li><b>PCWP</b>：氣球充氣測 Wedge pressure 代表左心前負荷。<b>測完馬上放氣</b>，不然會肺梗塞 (PA Infarction)。</li><li><b>波形</b>：護理師需熟悉各腔室波形，若導管滑動 (Migration) 需通知醫師。</li><li><b>數值</b>：CI 正常 2.5-4.0；SVR 代表血管阻力。</li></ul>'
     }
   },
   {
-    id: 'picc', title: 'PICC (周邊中心導管)', short: 'Peripherally Inserted',
+    id: 'double', 
+    title: 'Double Lumen 洗腎導管', 
+    short: 'Hemodialysis Catheter',
+    icon: '<circle cx="12" cy="12" r="10"/><path d="M12 6v12M6 12h12"/>', 
     content: {
-      location: '上臂貴要靜脈 → SVC。',
-      function: '中長期(週~月)輸液，無氣胸風險。',
-      indication: '抗生素>1週、TPN、周邊血管差。',
-      contraindication: '洗腎廔管同側、乳癌淋巴廓清側。',
-      complication: '靜脈炎、導管移位、DVT。',
-      care: '禁量血壓/抽血(該側)。每日量臂圍。'
-    }
-  },
-  {
-    id: 'porta', title: 'Port-A (人工血管)', short: 'Implantable Port',
-    content: {
-      location: '前胸皮下埋入基座，導管至SVC。',
-      function: '長期(年)、間歇性化療使用。',
-      indication: '癌症長期化療。',
-      contraindication: '感染、凝血異常。',
-      complication: '導管斷裂、注射座翻轉、藥物外滲。',
-      care: '須用Huber針(無削切)。用畢Heparin lock。'
+      intro: '雙腔導管，紅頭(A)出、藍頭(V)入。專門為了洗腎 (HD) 或洗肝 (MARS) 設計的大流量管路。',
+      location: '短期插 IJV 或 Femoral。長期則做 Perm-cath (有皮下隧道)。',
+      indication: '急性腎衰竭需緊急透析、AV廔管還沒成熟時。',
+      tips: '<ul><li><b>專管專用</b>：除非急救快死掉了，否則<b>嚴禁</b>拿洗腎導管來輸血或給藥。</li><li><b>封管</b>：洗完腎會用高濃度 Heparin 封管，下次使用前務必抽出，不然打進去病人會出血 (Systemic Heparinization)。</li></ul>'
     }
   }
 ];
 
-// --- App Logic ---
-const menu = document.getElementById('menuList');
-const main = document.getElementById('mainContent');
-const toggleBtn = document.getElementById('menuToggle');
-const isMobile = () => window.innerWidth < 768;
+// --- Logic ---
 
-// Toggle Menu
-toggleBtn.addEventListener('click', () => {
-  document.body.classList.toggle('menu-collapsed');
-});
+const viewContainer = document.getElementById('view-container');
+const sidebar = document.getElementById('sidebar');
+const sidebarOverlay = document.getElementById('sidebarOverlay');
+const sidebarList = document.getElementById('sidebarList');
 
-// Build Pages
-pages.forEach((p, idx)=>{
-  // Menu Item
-  const li = document.createElement('li');
-  li.innerHTML = `<a href="#${p.id}" data-id="${p.id}">${p.title}</a>`;
-  menu.appendChild(li);
+// 1. Render Sidebar
+function renderSidebar(){
+  let html = `<a href="#" class="nav-item" onclick="goHome(); return false;">🏠 回首頁 (Dashboard)</a>`;
+  devices.forEach(d => {
+    html += `<a href="#${d.id}" class="nav-item" data-id="${d.id}" onclick="route('${d.id}'); return false;">${d.title}</a>`;
+  });
+  sidebarList.innerHTML = html;
+}
 
-  // Content
-  const prev = idx > 0 ? pages[idx-1].id : null;
-  const next = idx < pages.length-1 ? pages[idx+1].id : null;
-  
-  const article = document.createElement('article');
-  article.className = 'page';
-  article.id = 'page-'+p.id;
-  article.innerHTML = `
-    <h2 style="font-size:24px;margin-bottom:4px">${p.title}</h2>
-    <div style="color:var(--text-muted);margin-bottom:20px;font-weight:500;font-size:14px">${p.short}</div>
-
-    <div class="diagram-box">
-      ${getDiagram(p.id)}
-    </div>
-
-    <div class="col2">
-      <div class="card">
-        <div class="section-title">位置 (Location)</div>
-        <div class="text">${p.content.location}</div>
+// 2. Render Home Grid
+function renderHome(){
+  let html = `<div class="home-grid">`;
+  devices.forEach(d => {
+    html += `
+      <div class="device-card" onclick="route('${d.id}')">
+        <div class="card-icon-wrap">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${d.icon}</svg>
+        </div>
+        <h3 class="card-title">${d.title}</h3>
+        <div class="card-desc">${d.content.intro}</div>
+        <div class="card-arrow">查看詳情 →</div>
       </div>
-      <div class="card">
-        <div class="section-title">作用 (Function)</div>
-        <div class="text">${p.content.function}</div>
+    `;
+  });
+  html += `</div>`;
+  viewContainer.innerHTML = html;
+  updateActiveNav(null);
+}
+
+// 3. Render Detail Page
+function renderDetail(id){
+  const device = devices.find(d => d.id === id);
+  if(!device) return renderHome();
+
+  // SVG Diagram logic (Reused but simplified)
+  const svgContent = getDiagramSVG(id);
+
+  const html = `
+    <div class="detail-page active">
+      <div style="margin-bottom:20px">
+        <button class="btn ghost small" onclick="goHome()">← 回列表</button>
       </div>
-    </div>
 
-    <div class="card" style="border-left:4px solid var(--ok)">
-      <div class="section-title" style="color:var(--ok)">適應症 (Indications)</div>
-      <div class="text">${p.content.indication}</div>
-    </div>
-
-    <div class="col2">
-      <div class="card" style="border-left:4px solid var(--danger)">
-        <div class="section-title" style="color:var(--danger)">禁忌症 (Contraindications)</div>
-        <div class="text">${p.content.contraindication}</div>
+      <div class="detail-header">
+        <span class="detail-subtitle">${device.short}</span>
+        <h1 class="detail-title">${device.title}</h1>
       </div>
-      <div class="card" style="border-left:4px solid var(--danger)">
-        <div class="section-title" style="color:var(--danger)">併發症 (Complications)</div>
-        <div class="text">${p.content.complication}</div>
+
+      <div class="diagram-container">
+        ${svgContent}
       </div>
-    </div>
 
-    <div class="card">
-      <div class="section-title" style="color:var(--text-muted)">護理重點 (Care)</div>
-      <div class="text">${p.content.care}</div>
-    </div>
+      <div class="info-block">
+        <div class="block-title">📍 位置與原理 (Location & Mechanism)</div>
+        <div class="block-content">${device.content.location}</div>
+      </div>
 
-    <div class="footerActions">
-      <button class="btn ghost small" data-prev="${prev}" ${prev?'':'disabled'}>← 上一個</button>
-      <div style="margin-left:auto">
-        <button class="btn small" data-next="${next}" ${next?'':'disabled'}>下一個 →</button>
+      <div class="info-block">
+        <div class="block-title green">✔ 適應症 (Indication)</div>
+        <div class="block-content">${device.content.indication}</div>
+      </div>
+
+      <div class="info-block">
+        <div class="block-title red">⚠ 臨床照護重點 (Clinical Tips)</div>
+        <div class="block-content">${device.content.tips}</div>
+      </div>
+      
+      <div style="margin-top:40px; text-align:center; opacity:0.6; font-size:13px">
+        - End of Note -
       </div>
     </div>
   `;
-  main.appendChild(article);
-});
+  viewContainer.innerHTML = html;
+  viewContainer.scrollTop = 0;
+  updateActiveNav(id);
+}
 
-// Navigation
-const showPage = (id) => {
-  document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('#menuList a').forEach(el => el.classList.remove('active'));
+// SVG Generator
+function getDiagramSVG(type){
+  const accent = 'var(--accent)';
+  const danger = 'var(--danger)';
+  const txt = 'currentColor';
+  let inner = '';
   
-  const target = document.getElementById('page-'+id);
-  if(target) { target.classList.add('active'); main.scrollTop = 0; }
-  
-  const link = document.querySelector(`#menuList a[data-id="${id}"]`);
-  if(link) link.classList.add('active');
-  
-  if(isMobile()) document.body.classList.add('menu-collapsed');
-};
-
-document.body.addEventListener('click', (e) => {
-  if(e.target.matches('#menuList a')) {
-    e.preventDefault();
-    showPage(e.target.dataset.id);
+  // 簡易示意圖邏輯
+  if(type === 'ecmo'){
+    inner = `<path d="M40 80 Q60 80 60 40 L100 20" stroke="${accent}" stroke-width="4" fill="none" marker-end="url(#arrow)"/><rect x="80" y="60" width="40" height="30" rx="4" stroke="${accent}" fill="none" opacity="0.5"/><text x="90" y="80" font-size="10" fill="${txt}">Pump</text><path d="M130 75 L160 75 Q180 75 180 50 L180 20" stroke="${danger}" stroke-width="4" fill="none"/>`;
+  } else if (type === 'iabp'){
+    inner = `<path d="M100 10 L100 150" stroke="${danger}" stroke-width="14" opacity="0.2"/><rect x="95" y="50" width="10" height="40" rx="5" fill="#f59e0b"/><text x="120" y="75" font-size="12" fill="${txt}">Balloon (Ao)</text>`;
+  } else if (['cvc','picc','hickman','double'].includes(type)){
+    inner = `<path d="M100 10 L100 100" stroke="${accent}" stroke-width="16" opacity="0.2"/><text x="115" y="50" font-size="10" fill="${txt}">SVC</text><path d="M50 20 L80 40 L100 40" stroke="#eab308" stroke-width="3" fill="none"/><circle cx="50" cy="20" r="4" fill="#eab308"/>`;
+  } else if (type === 'aline'){
+    inner = `<path d="M20 50 L180 50" stroke="${danger}" stroke-width="2" opacity="0.3"/><path d="M20 50 L40 30 L60 60 L80 20 L100 50 L120 50" stroke="${danger}" stroke-width="2" fill="none"/><text x="130" y="55" font-size="12" fill="${txt}">ABP Wave</text>`;
+  } else {
+    inner = `<text x="50%" y="50%" text-anchor="middle" fill="${txt}">Device Diagram</text>`;
   }
-  if(e.target.matches('[data-next]')) showPage(e.target.dataset.next);
-  if(e.target.matches('[data-prev]')) showPage(e.target.dataset.prev);
+  return `<svg viewBox="0 0 200 100" fill="none" stroke="currentColor">${inner}</svg>`;
+}
+
+// Router & UI Control
+function route(id){
+  closeMenu();
+  if(!id) {
+    renderHome();
+    location.hash = '';
+  } else {
+    renderDetail(id);
+    location.hash = id;
+  }
+}
+
+function goHome(){
+  route(null);
+}
+
+function updateActiveNav(id){
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  if(id){
+    const active = document.querySelector(`.nav-item[data-id="${id}"]`);
+    if(active) active.classList.add('active');
+  }
+}
+
+// Sidebar logic
+const menuBtn = document.getElementById('menuBtn');
+const closeSidebar = document.getElementById('closeSidebar');
+
+function openMenu(){
+  sidebar.classList.add('open');
+  sidebarOverlay.classList.add('open');
+}
+function closeMenu(){
+  sidebar.classList.remove('open');
+  sidebarOverlay.classList.remove('open');
+}
+
+menuBtn.addEventListener('click', openMenu);
+closeSidebar.addEventListener('click', closeMenu);
+sidebarOverlay.addEventListener('click', closeMenu);
+
+// Theme Toggle
+const themeBtn = document.getElementById('themeBtn');
+themeBtn.addEventListener('click', ()=>{
+  const html = document.documentElement;
+  if(html.hasAttribute('data-theme')) html.removeAttribute('data-theme');
+  else html.setAttribute('data-theme', 'dark');
 });
 
 // Init
-if(isMobile()) document.body.classList.add('menu-collapsed');
+renderSidebar();
 const hash = location.hash.replace('#','');
-showPage(hash || pages[0].id);
+if(hash && devices.find(d=>d.id===hash)) renderDetail(hash);
+else renderHome();
 
-// Utils
-document.getElementById('toggleTheme').addEventListener('click', ()=>{
-  const html = document.documentElement;
-  html.setAttribute('data-theme', html.hasAttribute('data-theme') ? '' : 'dark');
+// History handling
+window.addEventListener('popstate', ()=>{
+  const h = location.hash.replace('#','');
+  if(h) renderDetail(h);
+  else renderHome();
 });
-document.getElementById('menuFilter').addEventListener('input', (e)=>{
-  const term = e.target.value.toLowerCase();
-  document.querySelectorAll('#menuList li').forEach(li => {
-    li.style.display = li.innerText.toLowerCase().includes(term) ? '' : 'none';
-  });
-});
-document.addEventListener('keydown', (e)=>{
-  const active = document.querySelector('.page.active');
-  if(!active) return;
-  const idx = pages.findIndex(p => p.id === active.id.replace('page-',''));
-  if(e.key === 'ArrowRight' && idx < pages.length-1) showPage(pages[idx+1].id);
-  if(e.key === 'ArrowLeft' && idx > 0) showPage(pages[idx-1].id);
-});
+
 </script>
 </body>
 </html>
