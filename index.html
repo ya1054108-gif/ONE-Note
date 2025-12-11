@@ -3,17 +3,21 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-<title>ICU 臨床裝置速查手冊 (Visual Pro)</title>
+<title>ICU 物理治療裝置速查 (PT Edition)</title>
 <style>
 :root{
-  --bg: #f1f5f9; 
+  --bg: #f8fafc; 
   --card-bg: #ffffff; 
-  --text-main: #0f172a; 
+  --text-main: #1e293b; 
   --text-muted: #64748b; 
-  --accent: #0284c7; 
+  
+  /* PT Specific Colors */
+  --accent: #0ea5e9; /* Sky Blue */
   --accent-light: #e0f2fe;
-  --danger: #e11d48; --danger-bg: #ffe4e6;
-  --ok: #059669; --ok-bg: #d1fae5;
+  --danger: #ef4444; --danger-bg: #fee2e2;
+  --warning: #f59e0b; --warning-bg: #fef3c7; /* PT Caution */
+  --ok: #10b981; --ok-bg: #d1fae5;
+  
   --border: #e2e8f0;
   --header-h: 60px;
   --sidebar-w: 260px;
@@ -27,7 +31,8 @@
   --text-muted: #94a3b8; 
   --accent: #38bdf8; 
   --accent-light: rgba(56, 189, 248, 0.15);
-  --danger: #fb7185; --danger-bg: rgba(225, 29, 72, 0.15);
+  --danger: #f87171; --danger-bg: rgba(225, 29, 72, 0.15);
+  --warning: #fbbf24; --warning-bg: rgba(245, 158, 11, 0.15);
   --ok: #34d399; --ok-bg: rgba(5, 150, 105, 0.15);
   --border: #334155;
 }
@@ -52,7 +57,7 @@ body{
   width:32px;height:32px;border-radius:8px;
   background:linear-gradient(135deg,var(--accent),#2563eb);
   color:white;display:flex;align-items:center;justify-content:center;
-  font-weight:800;font-size:12px;
+  font-weight:800;font-size:14px;
 }
 .app-title{font-size:16px; font-weight:700; color:var(--text-main); line-height:1.2}
 .header-actions{margin-left:auto;}
@@ -128,7 +133,6 @@ body{
 /* UPDATED DIAGRAM STYLES */
 .diagram-box{
   background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius);
-  /* 增加高度以容納更詳細的圖解 */
   height: 220px; 
   display:flex; justify-content:center; align-items:center;
   padding:10px; margin-bottom:20px;
@@ -137,11 +141,7 @@ body{
 }
 .diagram-box svg{
   width:100%; height:100%; 
-  /* 確保 SVG 內的文字顏色正確 */
   color:var(--text-main);
-}
-.diagram-label {
-  font-family: sans-serif; font-size: 10px; fill: currentColor;
 }
 
 /* Section Grids */
@@ -158,16 +158,18 @@ body{
 }
 .info-title::before{content:''; width:4px; height:14px; border-radius:2px; display:inline-block}
 
-/* Color Coding */
+/* PT Specific Color Coding */
 .t-blue .info-title{color:var(--accent)} .t-blue .info-title::before{background:var(--accent)}
-.t-green .info-title{color:var(--ok)} .t-green .info-title::before{background:var(--ok)}
-.t-green.info-card{background:var(--ok-bg); border-color:transparent}
 .t-red .info-title{color:var(--danger)} .t-red .info-title::before{background:var(--danger)}
 .t-red.info-card{background:var(--danger-bg); border-color:transparent}
-.t-gray .info-title{color:var(--text-muted)} .t-gray .info-title::before{background:var(--text-muted)}
+
+/* PT Action Card (Special) */
+.t-pt .info-title{color:#b45309;} .t-pt .info-title::before{background:#f59e0b;}
+.t-pt.info-card{background:var(--warning-bg); border:1px solid #fcd34d;}
 
 .info-content{font-size:15px; line-height:1.6; color:var(--text-main)}
 ul{margin:0; padding-left:18px} li{margin-bottom:4px}
+b{font-weight:700; color:var(--text-main)}
 
 @media (max-width: 768px){
   .section-grid{grid-template-columns: 1fr}
@@ -184,8 +186,8 @@ ul{margin:0; padding-left:18px} li{margin-bottom:4px}
     <svg width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
   </button>
   <div class="logo-area" onclick="goHome()">
-    <div class="logo-icon">ICU</div>
-    <div class="app-title">臨床裝置速查 <small style="font-weight:400;color:var(--text-muted);font-size:12px">Visual Pro</small></div>
+    <div class="logo-icon">PT</div>
+    <div class="app-title">ICU 物理治療速查 <small style="font-weight:400;color:var(--text-muted);font-size:12px">Physio Edition</small></div>
   </div>
   <div class="header-actions">
     <button class="icon-btn" id="themeBtn">◐</button>
@@ -208,77 +210,87 @@ ul{margin:0; padding-left:18px} li{margin-bottom:4px}
 </div>
 
 <script>
-// --- 臨床內容資料庫 ---
+// --- PT 專用資料庫 ---
 const db = [
   {
-    id: 'ecmo', title: 'ECMO 葉克膜', short: 'Extracorporeal Life Support',
+    id: 'ecmo', title: 'ECMO 葉克膜', short: 'Life Support',
     icon: '<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>',
-    loc: '<b>VA mode</b>：股靜脈 (In) → 股動脈 (Out)。<br><b>VV mode</b>：股靜脈 (In) → 頸靜脈 (Out)。',
-    func: '利用離心幫浦 (Pump) 與氧合器 (Artificial Lung) 取代心肺功能。VA 救心+肺；VV 僅救肺。',
-    ind: '<ul><li><b>VA</b>：心因性休克、ECPR、嚴重心肌炎、無法脫離體外循環。</li><li><b>VV</b>：重度 ARDS (P/F ratio < 80)、嚴重 CO₂ retention、Lung rest。</li></ul>',
-    contra: '<ul><li><b>絕對</b>：末期疾病無法復原、不可逆腦傷。</li><li><b>相對</b>：嚴重出血傾向、主動脈剝離 (VA 絕對禁忌)。</li></ul>',
-    comp: '<ul><li><b>出血</b>：全身肝素化，最常見。</li><li><b>下肢缺血</b> (VA)：需接 DPC (遠端灌流管) 避免截肢。</li><li><b>南北症候群</b> (Harlequin)：VA 特有，上半身缺氧。</li></ul>',
-    care: '監測 Flow (3-5L/min)、RPM、跨膜壓差 (Delta P)。注意顏色 (靜脈暗紅/動脈鮮紅)。Heater 溫度設定。'
+    loc: '<b>VA</b>: Femoral V. (In) → Femoral A. (Out)<br><b>VV</b>: Femoral V. (In) → Jugular V. (Out)',
+    func: '取代心肺功能。VA 救心+肺；VV 僅救肺。管路粗且硬，容易受擺位影響。',
+    ind: '心因性休克、ECPR、ARDS。',
+    contra: '<ul><li><b>VA (Femoral)</b>：同側髖關節屈曲禁 > 30度。</li><li><b>VV (Jugular)</b>：頸部過度旋轉/伸展。</li><li>血流動力學極度不穩。</li></ul>',
+    comp: '<ul><li><b>管路滑脫</b>：大出血，致死率極高。</li><li><b>下肢缺血</b>：隨時摸足背動脈。</li></ul>',
+    pt_precautions: '<b>[極高風險]</b><br>1. <b>Mobilization</b>：若插股動脈 (Femoral)，嚴禁坐起大於 30-45 度 (依各院 Protocol)，通常 Bed rest。<br>2. <b>Flow 監測</b>：翻身或運動時若 Flow 驟降或管路抖動，立即停止動作並復位。<br>3. <b>DPC</b>：確認遠端灌流管有無折到，避免肢體壞死。'
   },
   {
-    id: 'iabp', title: 'IABP 主動脈氣球幫浦', short: 'Counter-pulsation',
+    id: 'iabp', title: 'IABP 主動脈氣球幫浦', short: 'Heart Assist',
     icon: '<path d="M12 2v20M8 12h8"/><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor"/>',
-    loc: '由股動脈打入。氣球尖端 (Tip) 應位於<b>左鎖骨下動脈開口下方 2cm</b> (約 T2-T3)。',
-    func: '<b>反搏原理</b>：舒張期充氣 (增加冠狀動脈灌流)，收縮期洩氣 (產生負壓、降低後負荷)。',
-    ind: '<ul><li>AMI 併發心因性休克。</li><li>High-risk PCI 或 CABG 術前/術後 Support。</li><li>二尖瓣逆流 (MR) 造成的不穩。</li></ul>',
-    contra: '<ul><li><b>主動脈瓣閉鎖不全 (AR)</b>：絕對禁忌！會把血打回 LV 造成心衰竭加劇。</li><li><b>主動脈剝離</b> (Aortic Dissection)。</li><li>嚴重腹主動脈瘤。</li></ul>',
-    comp: '<ul><li><b>下肢缺血</b>：最常見，隨時摸足背動脈。</li><li>氣球破裂 (管路見血)。</li><li>血小板低下 (Thrombocytopenia)。</li></ul>',
-    care: '插管側大腿<b>嚴禁彎曲</b>，床頭 < 30度。觀察充氣時機 (Dicrotic notch)。'
+    loc: 'Femoral Artery (股動脈)。Tip 位於主動脈弓下方。',
+    func: '增加冠狀動脈灌流，減輕心臟後負荷。',
+    ind: '心因性休克、高風險心導管術後。',
+    contra: '<ul><li><b>絕對禁忌</b>：下床活動 (OOB)。</li><li>插管側髖關節屈曲 (Hip Flexion)。</li><li>主動脈瓣閉鎖不全 (AR)。</li></ul>',
+    comp: '<ul><li>下肢缺血 (Limb Ischemia)。</li><li>導管移位導致腎動脈阻塞 (尿量減少)。</li></ul>',
+    pt_precautions: '<b>[絕對臥床]</b><br>1. <b>活動限制</b>：插管側大腿必須保持伸直 (Keep straight)，不可彎曲，Log roll 翻身需特別小心。<br>2. <b>床頭高度</b>：通常限制 < 30 度，避免導管打折或移位。<br>3. <b>循環評估</b>：治療前後務必觸摸足背動脈跳動。'
   },
   {
     id: 'cvc', title: 'CVC 中心靜脈導管', short: 'Central Line',
     icon: '<path d="M12 5v14M5 12h14"/>',
-    loc: '常見：內頸 (IJV)、鎖骨下 (Subclavian)、股 (Femoral)。Tip 位於 SVC/RA 交界 (Cavo-atrial junction)。',
-    func: '建立大管徑輸液通道、監測 CVP、給予刺激性藥物。',
-    ind: '<ul><li>周邊打不到 (Difficult IV)。</li><li>需給升壓劑 (Inotropes)、TPN、高濃度 K+。</li><li>急救大量輸液。</li></ul>',
-    contra: '<ul><li>穿刺部位感染。</li><li>嚴重凝血功能異常 (相對禁忌，IJV/Fem 較可壓迫止血)。</li></ul>',
-    comp: '<ul><li><b>氣胸/血胸</b>：On Subclavian 風險最高，術後必照 CXR。</li><li><b>CLABSI</b>：導管相關血流感染。</li><li>心律不整 (導絲刺到心臟)。</li></ul>',
-    care: '落實 Bundle Care。三消更換敷料。沒用到的管腔需 Flush/Lock。移除時請病人 Valsalva 防空氣栓塞。'
+    loc: 'Neck (IJV), Chest (Subclavian), Groin (Femoral)。',
+    func: '給藥、輸液、測量 CVP。',
+    ind: '長期輸液、急救給藥。',
+    contra: '無絕對運動禁忌，但需注意管路張力。',
+    comp: '<ul><li>移除時空氣栓塞。</li><li>氣胸 (Subclavian insertion)。</li></ul>',
+    pt_precautions: '<b>[注意張力]</b><br>1. <b>Neck/Chest</b>：肩關節活動 (ROM) 時避免過度外展或上抬，以免拉扯縫線。<br>2. <b>Femoral</b>：髖關節屈曲通常允許至 90 度 (視導管材質)，但需避免反覆擠壓導致栓塞。<br>3. <b>轉位</b>：小心管路勾到床欄或點滴架。'
   },
   {
-    id: 'aline', title: 'A-line 動脈導管', short: 'Arterial Line',
+    id: 'aline', title: 'A-line 動脈導管', short: 'BP Monitor',
     icon: '<path d="M2 12h20M2 12l2-2m2 2l2 2"/>',
-    loc: '首選橈動脈 (Radial)。次選股動脈 (Femoral)、足背動脈。',
-    func: '提供 Beat-to-beat 即時血壓、方便抽取 ABG。',
-    ind: '<ul><li>血動不穩需用 Vasopressor。</li><li>呼吸衰竭需頻繁驗血氣。</li><li>術中精密監測。</li></ul>',
-    contra: '<ul><li><b>Allen\'s Test 異常</b> (側支循環差)。</li><li>局部感染或血管阻塞疾病 (PVD)。</li></ul>',
-    comp: '<ul><li><b>血栓栓塞</b>：末梢發紺、壞死。</li><li>出血/血腫。</li><li>感染。</li></ul>',
-    care: '加壓袋 Keep 300 mmHg。Transducer 對齊第 4 肋間腋中線。<b>嚴禁給藥</b> (會截肢)。'
+    loc: 'Radial (手腕), Femoral (鼠蹊), Dorsalis Pedis (足背)。',
+    func: '即時血壓監測、抽血。',
+    ind: '血循不穩、使用升壓劑。',
+    contra: '<ul><li><b>Radial</b>：手腕過度彎曲 (會 damping)。</li><li><b>Femoral</b>：髖關節過度屈曲。</li></ul>',
+    comp: '<ul><li>管路脫落會<b>噴射狀出血</b>。</li><li>末梢發紺 (栓塞)。</li></ul>',
+    pt_precautions: '<b>[防脫落]</b><br>1. <b>準確度</b>：若改變體位 (坐/站)，Transducer 需重新歸零 (對齊腋中線)，否則血壓數值不準，易誤判病情。<br>2. <b>活動</b>：手腕 A-line 通常有副木固定，運動時避免壓迫。Femoral A-line 下床時需固定妥當，避免拉扯出血。<br>3. <b>意外移除</b>：若不慎拔除，立即加壓止血至少 5-10 分鐘並呼叫護理師。'
   },
   {
-    id: 'swan', title: 'Swan-Ganz 肺動脈導管', short: 'PAC (Hemodynamics)',
+    id: 'swan', title: 'Swan-Ganz 肺動脈導管', short: 'Hemodynamics',
     icon: '<circle cx="12" cy="12" r="10"/><path d="M12 12l4 4"/>',
-    loc: '經大靜脈 → RA → RV → PA → 嵌塞於肺小動脈 (Wedge)。',
-    func: '測量 PCWP (左心前負荷)、CO (心輸出量)、SVR (血管阻力)。',
-    ind: '<ul><li>不明原因休克 (鑑別心因性/敗血性)。</li><li>複雜心臟手術術後。</li><li>嚴重肺高壓評估。</li></ul>',
-    contra: '<ul><li>右心內腫瘤或血栓。</li><li>三尖瓣機械瓣膜 (Mechanical Valve)。</li></ul>',
-    comp: '<ul><li><b>肺動脈破裂</b>：致死率高，氣球充氣不可太久。</li><li>心律不整 (VPC/VT)。</li><li>導管打結。</li></ul>',
-    care: '測完 PCWP <b>立刻放氣</b>，避免肺梗塞。每日檢視波形位置 (Migration)。'
+    loc: '頸靜脈 → 右心 → 肺動脈。',
+    func: '測量 PCWP, CO, SVR。導管很長且經過心臟。',
+    ind: '心衰竭、肺高壓評估。',
+    contra: '嚴重心律不整時小心活動。',
+    comp: '<ul><li>肺動脈破裂。</li><li>心律不整 (VPC/VT)。</li></ul>',
+    pt_precautions: '<b>[小心拉扯]</b><br>1. <b>鎖定</b>：確認導管護套 (Sheath) 是否固定在鎖定位置，避免運動時導管滑入/滑出心臟。<br>2. <b>心律</b>：活動時密切觀察 ECG，若出現不尋常的 VPC，可能是導管刺激右心室，需暫停活動。<br>3. <b>Wedge</b>：PT 治療時通常不需要 Wedge，確認氣球已洩氣。'
   },
   {
-    id: 'picc', title: 'PICC 周邊中心導管', short: 'Long-term Access',
+    id: 'picc', title: 'PICC 周邊中心導管', short: 'Long-term IV',
     icon: '<rect x="4" y="4" width="16" height="16" rx="2"/>',
-    loc: '由上臂貴要靜脈 (Basilic) 置入，尖端位於 SVC。',
-    func: '中長期輸液通路 (數週~數月)，無氣胸風險。',
-    ind: '<ul><li>抗生素治療 > 14天。</li><li>TPN、化療。</li><li>周邊血管條件極差。</li></ul>',
-    contra: '<ul><li>患側有洗腎廔管 (AV fistula)。</li><li>患側乳癌淋巴廓清 (避免淋巴水腫)。</li></ul>',
-    comp: '<ul><li>導管移位。</li><li>靜脈炎 (Phlebitis)。</li><li>上肢 DVT (測量臂圍)。</li></ul>',
-    care: '<b>禁量血壓/抽血</b> (該側)。每週更換敷料。'
+    loc: '上臂 (Basilic V.) → SVC。',
+    func: '長期抗生素、TPN。',
+    ind: '周邊血管差、需長期治療。',
+    contra: '<ul><li><b>禁忌</b>：在置管側量血壓。</li><li><b>禁忌</b>：使用腋下拐杖 (Crutches) 壓迫該側。</li></ul>',
+    comp: '導管移位、靜脈炎。',
+    pt_precautions: '<b>[上肢活動]</b><br>1. <b>ROM</b>：置管後初期避免劇烈手臂外展/旋轉，穩定後通常可自由活動。<br>2. <b>承重</b>：避免在該側手臂進行高強度的承重訓練 (Weight bearing)。<br>3. <b>觀察</b>：測量臂圍，若運動後手臂腫脹，需懷疑 DVT。'
+  },
+  {
+    id: 'porta', title: 'Port-A 人工血管', short: 'Implantable Port',
+    icon: '<circle cx="12" cy="12" r="6" stroke="currentColor" fill="none"/><path d="M12 6v6"/>',
+    loc: '前胸皮下 (摸起來硬硬的圓盤) → SVC。',
+    func: '化療專用，可長期使用 (數年)。',
+    ind: '癌症化療病人。',
+    contra: '<ul><li><b>未下針時</b>：幾無禁忌，可自由活動。</li><li><b>下針後 (On needle)</b>：避免同側肩關節劇烈大範圍活動。</li></ul>',
+    comp: '導管斷裂 (Pinch-off syndrome)、藥物外滲。',
+    pt_precautions: '<b>[隱形冠軍]</b><br>1. <b>外觀</b>：平時埋在皮下，外觀無管路，容易被忽略。PT 觸診胸廓時需避開基座。<br>2. <b>下針時</b>：若有點滴連接 (插著 Huber needle)，運動時需避免拉扯，防針頭滑出導致化療藥外滲 (組織壞死)。<br>3. <b>Pinch-off</b>：避免鎖骨與第一肋骨間長期夾擠的動作 (如長時間舉重物)。'
   },
   {
     id: 'double', title: 'Double Lumen 洗腎導管', short: 'Hemodialysis',
-    icon: '<circle cx="12" cy="12" r="10"/><path d="M12 6v12M6 12h12"/>',
-    loc: '短期：IJV/Femoral。長期 (Perm-cath)：有隧道式皮下導管。',
-    func: '高流速雙腔導管，專供血液透析 (HD) 使用。紅出 (Arterial) 藍入 (Venous)。',
-    ind: '<ul><li>急性腎衰竭需透析。</li><li>慢性腎衰竭 AV 廔管未成熟。</li></ul>',
-    contra: '<ul><li>同 CVC 禁忌症。</li><li>上腔靜脈症候群。</li></ul>',
-    comp: '<ul><li>導管阻塞 (血栓)。</li><li>導管相關感染 (CRBSI) 風險高。</li></ul>',
-    care: '<b>專管專用</b>：除非急救否則嚴禁輸液/給藥。使用高濃度肝素封管。'
+    icon: '<circle cx="12" cy="12" r="10"/><path d="M12 6v6M6 12h12"/>',
+    loc: 'IJV (頸) 或 Femoral (股)。',
+    func: '血液透析 (HD)。管徑很粗。',
+    ind: '急性/慢性腎衰竭。',
+    contra: '<ul><li><b>Femoral</b>：洗腎中絕對不可彎曲髖關節。</li><li><b>IJV</b>：避免頸部過度扭轉。</li></ul>',
+    comp: '血栓、感染。',
+    pt_precautions: '<b>[硬且粗]</b><br>1. <b>不適感</b>：導管較硬，頸部置管病人轉頭會卡卡的，勿強行扳動。<br>2. <b>洗腎中</b>：若病人正在洗腎 (接機器)，通常不建議下床，可做簡單的 Bed exercise，但需確保管路不打折。<br>3. <b>洗腎後</b>：確認傷口無滲血再進行高強度活動。'
   }
 ];
 
@@ -326,17 +338,14 @@ function renderDetail(id){
       <div class="diagram-box">${svg}</div>
       <div class="section-grid t-blue">
         <div class="info-card"><div class="info-title">📍 位置 (Location)</div><div class="info-content">${d.loc}</div></div>
-        <div class="info-card"><div class="info-title">⚙ 作用原理 (Function)</div><div class="info-content">${d.func}</div></div>
+        <div class="info-card"><div class="info-title">⚙ 作用 (Function)</div><div class="info-content">${d.func}</div></div>
       </div>
-      <div class="section-grid t-green">
-        <div class="info-card full-width"><div class="info-title">✅ 適應症 (Indication)</div><div class="info-content">${d.ind}</div></div>
+      <div class="section-grid t-pt">
+        <div class="info-card full-width"><div class="info-title">⚠️ PT 介入須知 (Precautions)</div><div class="info-content">${d.pt_precautions}</div></div>
       </div>
       <div class="section-grid t-red">
-        <div class="info-card"><div class="info-title">⛔ 禁忌症 (Contraindication)</div><div class="info-content">${d.contra}</div></div>
-        <div class="info-card"><div class="info-title">⚠ 常見併發症 (Complication)</div><div class="info-content">${d.comp}</div></div>
-      </div>
-      <div class="section-grid t-gray">
-        <div class="info-card full-width"><div class="info-title">🛡 護理重點 (Nursing Care)</div><div class="info-content">${d.care}</div></div>
+        <div class="info-card"><div class="info-title">⛔ 禁忌 (Contraindication)</div><div class="info-content">${d.contra}</div></div>
+        <div class="info-card"><div class="info-title">⚡ 風險 (Complication)</div><div class="info-content">${d.comp}</div></div>
       </div>
     </div>
   `;
@@ -345,180 +354,110 @@ function renderDetail(id){
   closeSidebar();
 }
 
-// --- UPDATED SVG GENERATOR ---
-// 這裡包含了所有重新繪製的、帶有標籤的 SVG
+// --- DIAGRAM GENERATOR (含 Port-A) ---
 function getDiagram(type){
-  // Common styles
   const txtStyle = `font-family:sans-serif; font-size:10px; fill:currentColor; font-weight:bold;`;
-  const lineStyle = `fill:none; stroke-linecap:round; stroke-linejoin:round;`;
-  
   let inner = '';
   
   if(type === 'ecmo'){
-    // VA ECMO Schematic
     inner = `
-      <defs>
-        <marker id="arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="var(--accent)"/></marker>
-        <marker id="arrowRed" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="var(--danger)"/></marker>
-      </defs>
-      <!-- Body Outline -->
+      <defs><marker id="ar" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="var(--accent)"/></marker></defs>
       <path d="M60 20 Q100 20 100 60 L100 130" stroke="currentColor" stroke-opacity="0.1" stroke-width="4" fill="none"/>
-      
-      <!-- Vein (Drainage) -->
-      <path d="M90 120 L90 80 Q90 60 60 60 L30 60 L30 80" stroke="#0284c7" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
-      <text x="35" y="55" style="${txtStyle} fill:#0284c7">Drainage (V)</text>
-      
-      <!-- Pump & Oxygenator -->
+      <path d="M90 120 L90 80 Q90 60 60 60 L30 60 L30 80" stroke="#0284c7" stroke-width="3" fill="none" marker-end="url(#ar)"/>
       <rect x="20" y="80" width="40" height="30" rx="4" fill="var(--card-bg)" stroke="currentColor" stroke-width="2"/>
       <text x="25" y="100" style="${txtStyle}">Pump</text>
-      
-      <!-- Artery (Return) -->
-      <path d="M40 110 L40 130 Q40 140 70 140 L110 140 L110 120" stroke="#e11d48" stroke-width="3" fill="none" marker-end="url(#arrowRed)"/>
-      <text x="70" y="152" style="${txtStyle} fill:#e11d48">Return (A)</text>
-      
-      <text x="115" y="125" style="${txtStyle}">Femoral A.</text>
-      <text x="95" y="125" style="${txtStyle}" text-anchor="end">Femoral V.</text>
+      <path d="M40 110 L40 130 Q40 140 70 140 L110 140 L110 120" stroke="#e11d48" stroke-width="3" fill="none"/>
+      <text x="35" y="55" style="${txtStyle} fill:#0284c7">Venous (In)</text>
+      <text x="70" y="152" style="${txtStyle} fill:#e11d48">Arterial (Out)</text>
     `;
   } else if (type === 'iabp'){
-    // Aorta & IABP
     inner = `
-      <!-- Aorta -->
       <path d="M120 140 L120 50 Q120 10 70 10 Q30 10 30 60" stroke="#e11d48" stroke-width="20" opacity="0.15" fill="none"/>
-      <!-- Subclavian -->
-      <path d="M90 12 L110 5" stroke="#e11d48" stroke-width="8" opacity="0.15" fill="none"/>
-      <!-- Renal -->
-      <path d="M120 110 L150 120" stroke="#e11d48" stroke-width="6" opacity="0.15" fill="none"/>
-      <path d="M110 110 L80 120" stroke="#e11d48" stroke-width="6" opacity="0.15" fill="none"/>
-      
-      <!-- Balloon -->
       <rect x="115" y="50" width="10" height="40" rx="4" fill="#f59e0b" opacity="0.8"/>
       <line x1="120" y1="90" x2="120" y2="160" stroke="#666" stroke-width="2"/>
-      
-      <!-- Labels -->
       <text x="140" y="70" style="${txtStyle} fill:#f59e0b">Balloon</text>
-      <line x1="138" y1="70" x2="125" y2="70" stroke="currentColor" stroke-width="1"/>
-      
-      <text x="60" y="25" style="${txtStyle}">Aortic Arch</text>
-      <text x="115" y="15" style="${txtStyle}">L. Subclavian</text>
-      <text x="155" y="125" style="${txtStyle}">Renal A.</text>
-      
-      <!-- 2cm Marker -->
-      <line x1="105" y1="20" x2="105" y2="50" stroke="currentColor" stroke-dasharray="2,2" stroke-width="1"/>
-      <text x="80" y="40" style="${txtStyle} font-size:9px">~2cm</text>
+      <text x="60" y="25" style="${txtStyle}">Aorta</text>
+      <text x="80" y="40" style="${txtStyle} font-size:9px">L. Subclavian</text>
     `;
   } else if (type === 'cvc'){
-    // CVC
     inner = `
-      <!-- Body -->
       <path d="M50 10 Q100 10 130 30 L130 150" stroke="currentColor" stroke-width="1" fill="none" opacity="0.2"/>
-      <!-- Heart/SVC -->
       <path d="M100 20 L100 80 Q100 100 80 120" stroke="#0284c7" stroke-width="14" opacity="0.2" fill="none"/>
       <text x="110" y="60" style="${txtStyle}">SVC</text>
-      <text x="90" y="110" style="${txtStyle}">RA</text>
-      
-      <!-- IJV Path -->
       <path d="M70 10 L80 30 L100 40 L100 85" stroke="#eab308" stroke-width="3" fill="none"/>
       <circle cx="100" cy="85" r="3" fill="#eab308"/>
-      
-      <!-- Subclavian Path (Ghost) -->
-      <path d="M20 50 L60 50 L100 60" stroke="#eab308" stroke-width="2" fill="none" stroke-dasharray="3,2" opacity="0.5"/>
-      
-      <!-- Labels -->
-      <text x="75" y="20" style="${txtStyle}">IJV Entry</text>
-      <text x="10" y="45" style="${txtStyle}" opacity="0.6">Subclavian Entry</text>
-      <text x="110" y="85" style="${txtStyle}">Tip (Cavo-atrial)</text>
+      <text x="75" y="20" style="${txtStyle}">IJV</text>
+      <text x="110" y="85" style="${txtStyle}">Tip</text>
     `;
   } else if (type === 'aline'){
-    // Hand & Artery
     inner = `
-      <!-- Wrist Outline -->
       <path d="M20 60 Q60 60 100 60 L180 60" stroke="currentColor" stroke-width="15" stroke-opacity="0.1" fill="none"/>
-      <!-- Radial Artery -->
       <path d="M20 62 L180 62" stroke="#e11d48" stroke-width="3" fill="none" opacity="0.6"/>
-      
-      <!-- Cannula -->
       <path d="M80 30 L90 62" stroke="#eab308" stroke-width="3" fill="none"/>
-      <rect x="70" y="10" width="20" height="20" rx="2" fill="#eab308" stroke="currentColor"/>
-      
-      <!-- Transducer Line -->
-      <path d="M80 10 L80 0 L150 0 L150 20" stroke="#666" stroke-width="1" fill="none" stroke-dasharray="2,2"/>
-      
-      <!-- Labels -->
-      <text x="110" y="75" style="${txtStyle} fill:#e11d48">Radial Artery</text>
+      <text x="110" y="75" style="${txtStyle} fill:#e11d48">Radial A.</text>
       <text x="40" y="25" style="${txtStyle}">Cannula</text>
-      <text x="155" y="15" style="${txtStyle}">To Monitor</text>
     `;
   } else if (type === 'swan'){
-    // Heart Chambers & Swan-Ganz
     inner = `
-      <!-- Heart Chambers Simplified -->
       <path d="M30 40 Q50 20 80 40 T130 40" stroke="#0284c7" stroke-width="30" opacity="0.1" fill="none"/>
       <text x="30" y="70" style="${txtStyle}">RA</text>
-      <text x="80" y="70" style="${txtStyle}">RV</text>
       <text x="130" y="70" style="${txtStyle}">PA</text>
-      
-      <!-- Catheter Path -->
       <path d="M10 30 Q40 10 70 40 T130 40" stroke="#eab308" stroke-width="3" fill="none" stroke-dasharray="4,2"/>
-      
-      <!-- Balloon Wedge -->
       <circle cx="130" cy="40" r="6" fill="#eab308" opacity="0.7"/>
-      
-      <!-- Labels -->
-      <text x="140" y="45" style="${txtStyle}">Balloon (Wedge)</text>
-      <text x="10" y="20" style="${txtStyle}">Entry</text>
+      <text x="140" y="45" style="${txtStyle}">Wedge</text>
     `;
   } else if (type === 'picc'){
-    // Arm & Chest
     inner = `
-      <!-- Arm -->
-      <path d="M10 80 Q50 80 80 60" stroke="currentColor" stroke-width="20" stroke-opacity="0.1" fill="none"/>
-      <!-- Chest/SVC -->
-      <path d="M80 60 Q120 40 140 40 L140 100" stroke="currentColor" stroke-width="20" stroke-opacity="0.1" fill="none"/>
+      <path d="M10 80 Q50 80 80 60 Q120 40 140 40" stroke="currentColor" stroke-width="20" stroke-opacity="0.1" fill="none"/>
       <path d="M140 30 L140 90" stroke="#0284c7" stroke-width="10" opacity="0.2" fill="none"/>
-      
-      <!-- PICC Line -->
       <path d="M10 80 Q50 80 80 60 Q120 40 140 40 L140 70" stroke="#eab308" stroke-width="2" fill="none"/>
-      <circle cx="140" cy="70" r="3" fill="#eab308"/>
+      <text x="10" y="95" style="${txtStyle}">Arm</text>
+      <text x="150" y="60" style="${txtStyle}">SVC</text>
+    `;
+  } else if (type === 'porta'){
+    // Port-A specific diagram
+    inner = `
+      <!-- Skin Line -->
+      <path d="M20 40 L180 40" stroke="currentColor" stroke-width="1" stroke-dasharray="2,2" opacity="0.5"/>
+      <text x="20" y="35" style="${txtStyle}" opacity="0.5">Skin Surface</text>
+      
+      <!-- SVC/Vein -->
+      <path d="M120 40 L120 140" stroke="#0284c7" stroke-width="16" opacity="0.15" fill="none"/>
+      <text x="135" y="100" style="${txtStyle}">SVC</text>
+      
+      <!-- Port Body (Subcutaneous) -->
+      <path d="M40 60 L80 60 L85 80 L35 80 Z" fill="#666" opacity="0.2"/> <!-- Pocket -->
+      <rect x="45" y="55" width="30" height="20" rx="5" fill="#333" stroke="currentColor"/> <!-- Base -->
+      <circle cx="60" cy="65" r="6" fill="#ccc"/> <!-- Septum -->
+      
+      <!-- Catheter -->
+      <path d="M75 65 Q100 65 120 80 L120 120" stroke="#eab308" stroke-width="3" fill="none"/>
       
       <!-- Labels -->
-      <text x="10" y="95" style="${txtStyle}">Arm (Basilic V.)</text>
-      <text x="150" y="60" style="${txtStyle}">SVC</text>
-      <text x="90" y="50" style="${txtStyle} fill:#eab308">PICC Line</text>
+      <text x="40" y="95" style="${txtStyle}">Port Body (Subcut.)</text>
+      <text x="100" y="130" style="${txtStyle} fill:#eab308">Catheter Tip</text>
+      
+      <!-- Needle (Optional visualization) -->
+      <line x1="60" y1="10" x2="60" y2="65" stroke="#e11d48" stroke-width="2" opacity="0.3"/>
+      <text x="65" y="20" style="${txtStyle} fill:#e11d48" opacity="0.5">Needle (If accessed)</text>
     `;
   } else if (type === 'double'){
-    // Double Lumen
     inner = `
-      <!-- Neck -->
-      <path d="M50 10 L50 40" stroke="currentColor" stroke-width="1" stroke-dasharray="2,2" opacity="0.5"/>
-      <!-- SVC -->
       <rect x="80" y="10" width="40" height="130" fill="#0284c7" opacity="0.1"/>
-      
-      <!-- Catheter Body -->
       <path d="M100 0 L100 80" stroke="#666" stroke-width="8" opacity="0.5"/>
-      
-      <!-- Red Lumen (Out) -->
       <path d="M100 80 L95 110" stroke="#e11d48" stroke-width="4" fill="none"/>
-      <text x="50" y="110" style="${txtStyle} fill:#e11d48">Arterial (Out)</text>
-      
-      <!-- Blue Lumen (In) -->
       <path d="M100 80 L105 120" stroke="#0284c7" stroke-width="4" fill="none"/>
-      <text x="115" y="125" style="${txtStyle} fill:#0284c7">Venous (In)</text>
-      
-      <!-- Labels -->
-      <text x="125" y="30" style="${txtStyle}">SVC</text>
-      <text x="40" y="20" style="${txtStyle}">IJV Entry</text>
+      <text x="50" y="110" style="${txtStyle} fill:#e11d48">Out (A)</text>
+      <text x="115" y="125" style="${txtStyle} fill:#0284c7">In (V)</text>
+      <text x="125" y="30" style="${txtStyle}">Vein</text>
     `;
   }
-  
-  // Wrap in SVG
   return `<svg viewBox="0 0 200 160" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">${inner}</svg>`;
 }
 
-// Router
 function route(id){ location.hash = id; renderDetail(id); }
 function goHome(){ location.hash = ''; renderHome(); }
 
-// UI Helpers
 const menuBtn = document.getElementById('menuBtn');
 const closeBtn = document.getElementById('closeSidebar');
 const themeBtn = document.getElementById('themeBtn');
