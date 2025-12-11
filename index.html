@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-<title>ICU 臨床裝置速查手冊 (Pro)</title>
+<title>ICU 臨床裝置速查手冊 (Visual Pro)</title>
 <style>
 :root{
   --bg: #f1f5f9; 
@@ -125,11 +125,24 @@ body{
 .detail-title{font-size:24px; font-weight:800; margin:0}
 .tag{font-size:12px; color:var(--accent); background:var(--accent-light); padding:2px 8px; border-radius:4px; font-weight:600}
 
+/* UPDATED DIAGRAM STYLES */
 .diagram-box{
-  background: var(--card-bg); border: 1px dashed var(--border); border-radius: var(--radius);
-  height: 160px; display:flex; justify-content:center; padding:10px; margin-bottom:20px;
+  background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius);
+  /* 增加高度以容納更詳細的圖解 */
+  height: 220px; 
+  display:flex; justify-content:center; align-items:center;
+  padding:10px; margin-bottom:20px;
+  overflow: hidden;
+  position: relative;
 }
-.diagram-box svg{height:100%; width:100%; color:var(--text-main)}
+.diagram-box svg{
+  width:100%; height:100%; 
+  /* 確保 SVG 內的文字顏色正確 */
+  color:var(--text-main);
+}
+.diagram-label {
+  font-family: sans-serif; font-size: 10px; fill: currentColor;
+}
 
 /* Section Grids */
 .section-grid{display:grid; grid-template-columns: 1fr 1fr; gap:16px; margin-bottom:16px}
@@ -172,7 +185,7 @@ ul{margin:0; padding-left:18px} li{margin-bottom:4px}
   </button>
   <div class="logo-area" onclick="goHome()">
     <div class="logo-icon">ICU</div>
-    <div class="app-title">臨床裝置速查 <small style="font-weight:400;color:var(--text-muted);font-size:12px">Taiwan Edition</small></div>
+    <div class="app-title">臨床裝置速查 <small style="font-weight:400;color:var(--text-muted);font-size:12px">Visual Pro</small></div>
   </div>
   <div class="header-actions">
     <button class="icon-btn" id="themeBtn">◐</button>
@@ -195,7 +208,7 @@ ul{margin:0; padding-left:18px} li{margin-bottom:4px}
 </div>
 
 <script>
-// --- 臨床內容資料庫 (Taiwanese Clinical Style) ---
+// --- 臨床內容資料庫 ---
 const db = [
   {
     id: 'ecmo', title: 'ECMO 葉克膜', short: 'Extracorporeal Life Support',
@@ -256,6 +269,16 @@ const db = [
     contra: '<ul><li>患側有洗腎廔管 (AV fistula)。</li><li>患側乳癌淋巴廓清 (避免淋巴水腫)。</li></ul>',
     comp: '<ul><li>導管移位。</li><li>靜脈炎 (Phlebitis)。</li><li>上肢 DVT (測量臂圍)。</li></ul>',
     care: '<b>禁量血壓/抽血</b> (該側)。每週更換敷料。'
+  },
+  {
+    id: 'double', title: 'Double Lumen 洗腎導管', short: 'Hemodialysis',
+    icon: '<circle cx="12" cy="12" r="10"/><path d="M12 6v12M6 12h12"/>',
+    loc: '短期：IJV/Femoral。長期 (Perm-cath)：有隧道式皮下導管。',
+    func: '高流速雙腔導管，專供血液透析 (HD) 使用。紅出 (Arterial) 藍入 (Venous)。',
+    ind: '<ul><li>急性腎衰竭需透析。</li><li>慢性腎衰竭 AV 廔管未成熟。</li></ul>',
+    contra: '<ul><li>同 CVC 禁忌症。</li><li>上腔靜脈症候群。</li></ul>',
+    comp: '<ul><li>導管阻塞 (血栓)。</li><li>導管相關感染 (CRBSI) 風險高。</li></ul>',
+    care: '<b>專管專用</b>：除非急救否則嚴禁輸液/給藥。使用高濃度肝素封管。'
   }
 ];
 
@@ -265,20 +288,16 @@ const sidebarList = document.getElementById('sidebarList');
 const sidebar = document.getElementById('sidebar');
 const overlay = document.getElementById('sidebarOverlay');
 
-// 1. Render Sidebar & Home Grid
 function init(){
-  // Sidebar
-  let navHTML = `<a href="#" class="nav-item" onclick="goHome(); return false;">🏠 Dashboard (首頁)</a>`;
+  let navHTML = `<a href="#" class="nav-item" onclick="goHome(); return false;">🏠 Dashboard</a>`;
   navHTML += db.map(d => `<a href="#${d.id}" class="nav-item" onclick="route('${d.id}'); return false;">${d.title}</a>`).join('');
   sidebarList.innerHTML = navHTML;
 
-  // Check Hash
   const hash = location.hash.replace('#','');
   if(hash && db.find(d=>d.id===hash)) renderDetail(hash);
   else renderHome();
 }
 
-// 2. Render Home
 function renderHome(){
   let html = `<div class="home-grid">`;
   html += db.map(d => `
@@ -293,13 +312,10 @@ function renderHome(){
   closeSidebar();
 }
 
-// 3. Render Detail (六大區塊結構)
 function renderDetail(id){
   const d = db.find(item => item.id === id);
   if(!d) return renderHome();
-
   const svg = getDiagram(id);
-  
   const html = `
     <div class="detail-page active">
       <button class="back-btn" onclick="goHome()">← 返回列表</button>
@@ -307,47 +323,20 @@ function renderDetail(id){
         <span class="tag">${d.short}</span>
         <h1 class="detail-title">${d.title}</h1>
       </div>
-
       <div class="diagram-box">${svg}</div>
-
-      <!-- 第一排：藍色基礎資訊 -->
       <div class="section-grid t-blue">
-        <div class="info-card">
-          <div class="info-title">📍 位置 (Location)</div>
-          <div class="info-content">${d.loc}</div>
-        </div>
-        <div class="info-card">
-          <div class="info-title">⚙ 作用原理 (Function)</div>
-          <div class="info-content">${d.func}</div>
-        </div>
+        <div class="info-card"><div class="info-title">📍 位置 (Location)</div><div class="info-content">${d.loc}</div></div>
+        <div class="info-card"><div class="info-title">⚙ 作用原理 (Function)</div><div class="info-content">${d.func}</div></div>
       </div>
-
-      <!-- 第二排：綠色適應症 -->
       <div class="section-grid t-green">
-        <div class="info-card full-width">
-          <div class="info-title">✅ 適應症 (Indication)</div>
-          <div class="info-content">${d.ind}</div>
-        </div>
+        <div class="info-card full-width"><div class="info-title">✅ 適應症 (Indication)</div><div class="info-content">${d.ind}</div></div>
       </div>
-
-      <!-- 第三排：紅色警示 (禁忌+併發症) -->
       <div class="section-grid t-red">
-        <div class="info-card">
-          <div class="info-title">⛔ 禁忌症 (Contraindication)</div>
-          <div class="info-content">${d.contra}</div>
-        </div>
-        <div class="info-card">
-          <div class="info-title">⚠ 常見併發症 (Complication)</div>
-          <div class="info-content">${d.comp}</div>
-        </div>
+        <div class="info-card"><div class="info-title">⛔ 禁忌症 (Contraindication)</div><div class="info-content">${d.contra}</div></div>
+        <div class="info-card"><div class="info-title">⚠ 常見併發症 (Complication)</div><div class="info-content">${d.comp}</div></div>
       </div>
-
-      <!-- 第四排：灰色護理 -->
       <div class="section-grid t-gray">
-        <div class="info-card full-width">
-          <div class="info-title">🛡 護理重點 (Nursing Care)</div>
-          <div class="info-content">${d.care}</div>
-        </div>
+        <div class="info-card full-width"><div class="info-title">🛡 護理重點 (Nursing Care)</div><div class="info-content">${d.care}</div></div>
       </div>
     </div>
   `;
@@ -356,20 +345,173 @@ function renderDetail(id){
   closeSidebar();
 }
 
-// Diagram Generator (SVG)
+// --- UPDATED SVG GENERATOR ---
+// 這裡包含了所有重新繪製的、帶有標籤的 SVG
 function getDiagram(type){
-  const ac = 'var(--accent)'; const da = 'var(--danger)'; const txt = 'currentColor';
+  // Common styles
+  const txtStyle = `font-family:sans-serif; font-size:10px; fill:currentColor; font-weight:bold;`;
+  const lineStyle = `fill:none; stroke-linecap:round; stroke-linejoin:round;`;
+  
   let inner = '';
+  
   if(type === 'ecmo'){
-    inner = `<path d="M40 80 Q60 90 80 40 L100 20" stroke="${ac}" stroke-width="4" fill="none" marker-end="url(#arrow)"/><rect x="70" y="65" width="40" height="30" rx="4" stroke="${ac}" fill="none" opacity="0.5"/><text x="80" y="85" font-size="10" fill="${txt}">Pump</text><path d="M120 80 L150 80 Q170 80 170 50 L170 20" stroke="${da}" stroke-width="4" fill="none"/>`;
+    // VA ECMO Schematic
+    inner = `
+      <defs>
+        <marker id="arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="var(--accent)"/></marker>
+        <marker id="arrowRed" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="var(--danger)"/></marker>
+      </defs>
+      <!-- Body Outline -->
+      <path d="M60 20 Q100 20 100 60 L100 130" stroke="currentColor" stroke-opacity="0.1" stroke-width="4" fill="none"/>
+      
+      <!-- Vein (Drainage) -->
+      <path d="M90 120 L90 80 Q90 60 60 60 L30 60 L30 80" stroke="#0284c7" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+      <text x="35" y="55" style="${txtStyle} fill:#0284c7">Drainage (V)</text>
+      
+      <!-- Pump & Oxygenator -->
+      <rect x="20" y="80" width="40" height="30" rx="4" fill="var(--card-bg)" stroke="currentColor" stroke-width="2"/>
+      <text x="25" y="100" style="${txtStyle}">Pump</text>
+      
+      <!-- Artery (Return) -->
+      <path d="M40 110 L40 130 Q40 140 70 140 L110 140 L110 120" stroke="#e11d48" stroke-width="3" fill="none" marker-end="url(#arrowRed)"/>
+      <text x="70" y="152" style="${txtStyle} fill:#e11d48">Return (A)</text>
+      
+      <text x="115" y="125" style="${txtStyle}">Femoral A.</text>
+      <text x="95" y="125" style="${txtStyle}" text-anchor="end">Femoral V.</text>
+    `;
   } else if (type === 'iabp'){
-    inner = `<path d="M100 10 L100 150" stroke="${da}" stroke-width="14" opacity="0.15"/><rect x="95" y="50" width="10" height="40" rx="5" fill="#f59e0b"/><text x="115" y="75" font-size="10" fill="${txt}">Balloon (Ao)</text>`;
-  } else if (['cvc','picc','swan'].includes(type)){
-    inner = `<path d="M100 10 L100 100" stroke="${ac}" stroke-width="16" opacity="0.15"/><text x="115" y="50" font-size="10" fill="${txt}">SVC</text><path d="M50 20 L80 40 L100 40" stroke="#eab308" stroke-width="3" fill="none"/><circle cx="50" cy="20" r="4" fill="#eab308"/>`;
+    // Aorta & IABP
+    inner = `
+      <!-- Aorta -->
+      <path d="M120 140 L120 50 Q120 10 70 10 Q30 10 30 60" stroke="#e11d48" stroke-width="20" opacity="0.15" fill="none"/>
+      <!-- Subclavian -->
+      <path d="M90 12 L110 5" stroke="#e11d48" stroke-width="8" opacity="0.15" fill="none"/>
+      <!-- Renal -->
+      <path d="M120 110 L150 120" stroke="#e11d48" stroke-width="6" opacity="0.15" fill="none"/>
+      <path d="M110 110 L80 120" stroke="#e11d48" stroke-width="6" opacity="0.15" fill="none"/>
+      
+      <!-- Balloon -->
+      <rect x="115" y="50" width="10" height="40" rx="4" fill="#f59e0b" opacity="0.8"/>
+      <line x1="120" y1="90" x2="120" y2="160" stroke="#666" stroke-width="2"/>
+      
+      <!-- Labels -->
+      <text x="140" y="70" style="${txtStyle} fill:#f59e0b">Balloon</text>
+      <line x1="138" y1="70" x2="125" y2="70" stroke="currentColor" stroke-width="1"/>
+      
+      <text x="60" y="25" style="${txtStyle}">Aortic Arch</text>
+      <text x="115" y="15" style="${txtStyle}">L. Subclavian</text>
+      <text x="155" y="125" style="${txtStyle}">Renal A.</text>
+      
+      <!-- 2cm Marker -->
+      <line x1="105" y1="20" x2="105" y2="50" stroke="currentColor" stroke-dasharray="2,2" stroke-width="1"/>
+      <text x="80" y="40" style="${txtStyle} font-size:9px">~2cm</text>
+    `;
+  } else if (type === 'cvc'){
+    // CVC
+    inner = `
+      <!-- Body -->
+      <path d="M50 10 Q100 10 130 30 L130 150" stroke="currentColor" stroke-width="1" fill="none" opacity="0.2"/>
+      <!-- Heart/SVC -->
+      <path d="M100 20 L100 80 Q100 100 80 120" stroke="#0284c7" stroke-width="14" opacity="0.2" fill="none"/>
+      <text x="110" y="60" style="${txtStyle}">SVC</text>
+      <text x="90" y="110" style="${txtStyle}">RA</text>
+      
+      <!-- IJV Path -->
+      <path d="M70 10 L80 30 L100 40 L100 85" stroke="#eab308" stroke-width="3" fill="none"/>
+      <circle cx="100" cy="85" r="3" fill="#eab308"/>
+      
+      <!-- Subclavian Path (Ghost) -->
+      <path d="M20 50 L60 50 L100 60" stroke="#eab308" stroke-width="2" fill="none" stroke-dasharray="3,2" opacity="0.5"/>
+      
+      <!-- Labels -->
+      <text x="75" y="20" style="${txtStyle}">IJV Entry</text>
+      <text x="10" y="45" style="${txtStyle}" opacity="0.6">Subclavian Entry</text>
+      <text x="110" y="85" style="${txtStyle}">Tip (Cavo-atrial)</text>
+    `;
   } else if (type === 'aline'){
-    inner = `<path d="M20 60 L180 60" stroke="${da}" stroke-width="2" opacity="0.3"/><path d="M20 60 L40 40 L60 70 L80 30 L100 60 L120 60" stroke="${da}" stroke-width="2" fill="none"/><text x="130" y="65" font-size="12" fill="${txt}">ABP</text>`;
+    // Hand & Artery
+    inner = `
+      <!-- Wrist Outline -->
+      <path d="M20 60 Q60 60 100 60 L180 60" stroke="currentColor" stroke-width="15" stroke-opacity="0.1" fill="none"/>
+      <!-- Radial Artery -->
+      <path d="M20 62 L180 62" stroke="#e11d48" stroke-width="3" fill="none" opacity="0.6"/>
+      
+      <!-- Cannula -->
+      <path d="M80 30 L90 62" stroke="#eab308" stroke-width="3" fill="none"/>
+      <rect x="70" y="10" width="20" height="20" rx="2" fill="#eab308" stroke="currentColor"/>
+      
+      <!-- Transducer Line -->
+      <path d="M80 10 L80 0 L150 0 L150 20" stroke="#666" stroke-width="1" fill="none" stroke-dasharray="2,2"/>
+      
+      <!-- Labels -->
+      <text x="110" y="75" style="${txtStyle} fill:#e11d48">Radial Artery</text>
+      <text x="40" y="25" style="${txtStyle}">Cannula</text>
+      <text x="155" y="15" style="${txtStyle}">To Monitor</text>
+    `;
+  } else if (type === 'swan'){
+    // Heart Chambers & Swan-Ganz
+    inner = `
+      <!-- Heart Chambers Simplified -->
+      <path d="M30 40 Q50 20 80 40 T130 40" stroke="#0284c7" stroke-width="30" opacity="0.1" fill="none"/>
+      <text x="30" y="70" style="${txtStyle}">RA</text>
+      <text x="80" y="70" style="${txtStyle}">RV</text>
+      <text x="130" y="70" style="${txtStyle}">PA</text>
+      
+      <!-- Catheter Path -->
+      <path d="M10 30 Q40 10 70 40 T130 40" stroke="#eab308" stroke-width="3" fill="none" stroke-dasharray="4,2"/>
+      
+      <!-- Balloon Wedge -->
+      <circle cx="130" cy="40" r="6" fill="#eab308" opacity="0.7"/>
+      
+      <!-- Labels -->
+      <text x="140" y="45" style="${txtStyle}">Balloon (Wedge)</text>
+      <text x="10" y="20" style="${txtStyle}">Entry</text>
+    `;
+  } else if (type === 'picc'){
+    // Arm & Chest
+    inner = `
+      <!-- Arm -->
+      <path d="M10 80 Q50 80 80 60" stroke="currentColor" stroke-width="20" stroke-opacity="0.1" fill="none"/>
+      <!-- Chest/SVC -->
+      <path d="M80 60 Q120 40 140 40 L140 100" stroke="currentColor" stroke-width="20" stroke-opacity="0.1" fill="none"/>
+      <path d="M140 30 L140 90" stroke="#0284c7" stroke-width="10" opacity="0.2" fill="none"/>
+      
+      <!-- PICC Line -->
+      <path d="M10 80 Q50 80 80 60 Q120 40 140 40 L140 70" stroke="#eab308" stroke-width="2" fill="none"/>
+      <circle cx="140" cy="70" r="3" fill="#eab308"/>
+      
+      <!-- Labels -->
+      <text x="10" y="95" style="${txtStyle}">Arm (Basilic V.)</text>
+      <text x="150" y="60" style="${txtStyle}">SVC</text>
+      <text x="90" y="50" style="${txtStyle} fill:#eab308">PICC Line</text>
+    `;
+  } else if (type === 'double'){
+    // Double Lumen
+    inner = `
+      <!-- Neck -->
+      <path d="M50 10 L50 40" stroke="currentColor" stroke-width="1" stroke-dasharray="2,2" opacity="0.5"/>
+      <!-- SVC -->
+      <rect x="80" y="10" width="40" height="130" fill="#0284c7" opacity="0.1"/>
+      
+      <!-- Catheter Body -->
+      <path d="M100 0 L100 80" stroke="#666" stroke-width="8" opacity="0.5"/>
+      
+      <!-- Red Lumen (Out) -->
+      <path d="M100 80 L95 110" stroke="#e11d48" stroke-width="4" fill="none"/>
+      <text x="50" y="110" style="${txtStyle} fill:#e11d48">Arterial (Out)</text>
+      
+      <!-- Blue Lumen (In) -->
+      <path d="M100 80 L105 120" stroke="#0284c7" stroke-width="4" fill="none"/>
+      <text x="115" y="125" style="${txtStyle} fill:#0284c7">Venous (In)</text>
+      
+      <!-- Labels -->
+      <text x="125" y="30" style="${txtStyle}">SVC</text>
+      <text x="40" y="20" style="${txtStyle}">IJV Entry</text>
+    `;
   }
-  return `<svg viewBox="0 0 200 100" fill="none" stroke="currentColor">${inner}</svg>`;
+  
+  // Wrap in SVG
+  return `<svg viewBox="0 0 200 160" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">${inner}</svg>`;
 }
 
 // Router
@@ -380,13 +522,14 @@ function goHome(){ location.hash = ''; renderHome(); }
 const menuBtn = document.getElementById('menuBtn');
 const closeBtn = document.getElementById('closeSidebar');
 const themeBtn = document.getElementById('themeBtn');
+const sidebarOverlay = document.getElementById('sidebarOverlay');
 
-function openSidebar(){ sidebar.classList.add('open'); overlay.classList.add('open'); }
-function closeSidebar(){ sidebar.classList.remove('open'); overlay.classList.remove('open'); }
+function openSidebar(){ sidebar.classList.add('open'); sidebarOverlay.classList.add('open'); }
+function closeSidebar(){ sidebar.classList.remove('open'); sidebarOverlay.classList.remove('open'); }
 
 menuBtn.addEventListener('click', openSidebar);
 closeBtn.addEventListener('click', closeSidebar);
-overlay.addEventListener('click', closeSidebar);
+sidebarOverlay.addEventListener('click', closeSidebar);
 
 themeBtn.addEventListener('click', ()=>{
   const h = document.documentElement;
