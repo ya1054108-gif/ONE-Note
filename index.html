@@ -3,155 +3,170 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>臨床裝置完全筆記 — ECMO · IABP · CVC · A-line · Swan-Ganz · Hickman · Double-lumen · PICC · Port-A</title>
+<title>臨床裝置完全筆記 — ECMO · IABP · CVC · A-line · Swan-Ganz · PICC</title>
 <meta name="description" content="極為詳細的 ICU / 術中裝置筆記：含解剖示意圖、位置、作用、適應症、禁忌症與併發症。" />
 <style>
 :root{
-  --bg:#f4f7fb; --card:#fff; --muted:#6b7280; --accent:#0b6fff; --danger:#b62525; --ok:#00796b;
-  --glass: rgba(255,255,255,0.65);
-  --side-w: 250px; /* 調整後的側邊欄寬度 */
-  --header-h: 70px;
+  /* 亮色模式變數 */
+  --bg: #f4f7fb; 
+  --card: #ffffff; 
+  --text-main: #0f172a; /* 深色字 */
+  --text-muted: #64748b; 
+  --accent: #0b6fff; 
+  --danger: #e11d48; 
+  --ok: #059669;
+  --side-w: 250px; 
+  --header-h: 64px;
+  --border: rgba(0,0,0,0.08);
 }
+
 [data-theme="dark"]{
-  --bg:#071124; --card:#0b1622; --muted:#9aa4b2; --accent:#6ea8ff; --danger:#ff7b7b; --ok:#4bd1b2; --glass: rgba(255,255,255,0.02);
+  /* 深色模式變數 */
+  --bg: #0f172a; 
+  --card: #1e293b; 
+  --text-main: #f1f5f9; /* 淺色字 (修正重點) */
+  --text-muted: #94a3b8; 
+  --accent: #60a5fa; /* 變亮的藍色 */
+  --danger: #fb7185; /* 變亮的紅色 */
+  --ok: #34d399;
+  --border: rgba(255,255,255,0.1);
 }
+
 *{box-sizing:border-box}
-body{font-family: -apple-system, "Segoe UI", Roboto, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", Arial; margin:0; background:linear-gradient(180deg,var(--bg), #eaf2ff); color:#06122a; height:100vh; overflow:hidden;}
+
+body{
+  font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+  margin:0; 
+  background: var(--bg); 
+  color: var(--text-main); /* 讓文字顏色跟隨變數 */
+  height:100vh; 
+  overflow:hidden;
+  transition: background 0.3s, color 0.3s; /* 平滑切換效果 */
+}
 
 /* Header */
 .header{
-  height: var(--header-h); padding: 0 20px;
+  height: var(--header-h); padding: 0 16px;
   display:flex; align-items:center; gap:16px; 
-  background: var(--bg); border-bottom: 1px solid rgba(0,0,0,0.05);
+  background: var(--card); border-bottom: 1px solid var(--border);
   position:fixed; top:0; left:0; right:0; z-index:100;
 }
-.logo{width:40px;height:40px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#2cc0ff);display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:14px;box-shadow:0 4px 12px rgba(11,111,255,0.12);flex-shrink:0}
+.logo{
+  width:36px;height:36px;border-radius:8px;
+  background:linear-gradient(135deg,var(--accent),#3b82f6);
+  display:flex;align-items:center;justify-content:center;
+  color:white;font-weight:800;font-size:14px;flex-shrink:0
+}
 .title-group{display:flex; flex-direction:column;}
-.title{font-size:18px;margin:0;line-height:1.2}
-.subtitle{color:var(--muted);font-size:12px;margin:0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 400px;}
+.title{font-size:16px; margin:0; font-weight:700; color:var(--text-main)}
+.subtitle{color:var(--text-muted); font-size:12px; margin:0;}
 
-.controls{margin-left:auto;display:flex;gap:8px;align-items:center;}
-.btn{background:var(--accent);color:white;padding:6px 12px;border-radius:6px;border:none;cursor:pointer;font-weight:600;font-size:13px; transition:0.2s}
-.btn:hover{filter:brightness(1.1)}
-.btn.ghost{background:transparent;color:var(--accent);border:1px solid rgba(11,111,255,0.2)}
-.btn.icon-btn{padding:8px; display:flex; align-items:center; justify-content:center;}
+.controls{margin-left:auto;display:flex;gap:8px;}
+.btn{background:var(--accent);color:white;padding:6px 12px;border-radius:6px;border:none;cursor:pointer;font-weight:600;font-size:13px;}
+.btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--border)}
+.btn.ghost:hover{background:rgba(11,111,255,0.05)}
+.btn.icon-btn{padding:8px; display:flex; align-items:center; justify-content:center; color:var(--text-main)}
 
-/* Layout Container */
+/* Layout */
 .container{
   display:grid;
   grid-template-columns: var(--side-w) 1fr;
   height: calc(100vh - var(--header-h));
   margin-top: var(--header-h);
-  transition: grid-template-columns 0.3s ease;
-  position: relative;
+  transition: grid-template-columns 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
-
-/* 狀態：收折時 */
-body.menu-collapsed .container {
-  grid-template-columns: 0px 1fr;
-}
+body.menu-collapsed .container { grid-template-columns: 0px 1fr; }
 
 /* Sidebar */
 nav.side{
   background:var(--card); 
-  border-right:1px solid rgba(0,0,0,0.05);
-  overflow-y:auto; overflow-x:hidden;
-  padding:16px;
-  white-space: nowrap;
-  transition: all 0.3s ease;
-  opacity: 1;
-  width: 100%;
+  border-right:1px solid var(--border);
+  overflow-y:auto; padding:16px;
+  width: 100%; transition: opacity 0.2s;
 }
-body.menu-collapsed nav.side {
-  padding: 16px 0; /* 收折時移除左右 padding 避免文字殘留 */
-  opacity: 0.5;
-  pointer-events: none;
-}
+body.menu-collapsed nav.side { opacity: 0; pointer-events: none; }
 
-nav.side h3{margin:0 0 12px 0; font-size:14px; color:var(--muted); text-transform:uppercase; letter-spacing:1px}
 nav.side ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:4px}
-nav.side a{display:block;padding:8px 12px;border-radius:6px;color:var(--accent);text-decoration:none;font-weight:500;transition:0.2s; font-size:14px}
-nav.side a.active{background:rgba(11,111,255,0.08);color:var(--accent); font-weight:700;}
-nav.side a:hover{background:rgba(11,111,255,0.04)}
+nav.side a{
+  display:block;padding:8px 12px;border-radius:6px;
+  color:var(--text-muted); text-decoration:none;
+  font-weight:500; font-size:14px; transition:0.2s
+}
+nav.side a:hover{background:var(--bg); color:var(--accent)}
+nav.side a.active{background:var(--accent); color:#fff; font-weight:600}
 
 /* Main Content */
 main{
   padding:24px 40px; 
-  background:var(--card); 
+  background:var(--bg); /* 確保背景色跟隨變數 */
   overflow-y:auto; 
-  scroll-behavior: smooth;
 }
 
-/* Page Styles */
-.page{display:none;animation:fadeIn 0.3s ease; max-width: 900px; margin: 0 auto;}
-.page.active{display:block}
-@keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.page{display:none; max-width: 900px; margin: 0 auto; padding-bottom: 60px;}
+.page.active{display:block; animation: fadeIn 0.4s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
-.section-title{
-  font-size: 14px; font-weight: 700; color: var(--accent); margin-bottom: 8px;
-  display:flex; align-items:center; gap:8px; text-transform:uppercase; letter-spacing:0.5px;
+/* Cards & Sections */
+h2{color:var(--text-main); margin-top:0}
+.card{
+  background:var(--card);
+  padding:16px; border-radius:12px;
+  border:1px solid var(--border);
+  margin-bottom:16px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
-.section-title::before{content:'';display:block;width:4px;height:14px;background:var(--accent);border-radius:2px}
-
-.card{background:linear-gradient(180deg,var(--bg),#fff);padding:16px;border-radius:12px;border:1px solid rgba(11,17,32,0.05);margin-bottom:16px}
 .col2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-ul, ol{padding-left:20px;margin:0;font-size:15px;color:#334155}
-[data-theme="dark"] ul{color:#cbd5e1}
-li{margin-bottom:6px}
+.section-title{
+  font-size: 13px; font-weight: 700; 
+  color: var(--accent); margin-bottom: 8px;
+  text-transform:uppercase; letter-spacing:0.5px;
+}
+.text{font-size:15px; line-height:1.6; color:var(--text-main)}
+ul{padding-left:20px; color:var(--text-main)}
 
-/* Diagram Box */
+/* Diagram Box (SVG) */
 .diagram-box{
-  background: var(--bg); border-radius: 12px; padding: 10px; 
+  background: var(--card); border-radius: 12px; padding: 10px; 
   display: flex; justify-content: center; align-items: center; margin-bottom: 20px;
-  border: 1px dashed rgba(11,111,255,0.2); height: 160px;
+  border: 1px dashed var(--border); height: 180px;
+  color: var(--text-main); /* 關鍵：讓 SVG 內的 currentColor 讀取這個顏色 */
 }
 .diagram-box svg{max-height:100%; width:100%;}
 
-/* Search Input */
-.search{width:100%;padding:8px 12px;border-radius:6px;border:1px solid rgba(11,17,32,0.1);margin-bottom:16px; font-size:13px; background:var(--bg); color:inherit}
+/* Inputs & Buttons */
+.search{
+  width:100%;padding:8px 12px;border-radius:6px;
+  border:1px solid var(--border); margin-bottom:16px;
+  background:var(--bg); color:var(--text-main);
+}
+.footerActions{display:flex;gap:8px;margin-top:30px;padding-top:20px;border-top:1px solid var(--border)}
 
-/* Footer Actions */
-.footerActions{display:flex;gap:8px;margin-top:30px;padding-top:20px;border-top:1px solid rgba(0,0,0,0.05)}
-
-/* Responsive */
+/* Mobile */
 @media (max-width: 768px) {
-  .header{padding:0 12px;}
-  .subtitle, #exportBtn {display:none} /* 手機隱藏副標題與下載按鈕 */
-  
-  /* 手機版佈局改為絕對定位抽屜 */
-  .container { display: block; position: relative; }
-  main { padding: 16px; height: 100%; }
-  
+  .subtitle, #exportBtn {display:none}
+  .container { display: block; }
   nav.side {
-    position: absolute; top: 0; bottom: 0; left: 0;
-    width: 240px; z-index: 50;
-    box-shadow: 4px 0 20px rgba(0,0,0,0.1);
-    transform: translateX(0);
+    position: absolute; top: 0; bottom: 0; left: 0; z-index: 50;
+    width: 240px; transform: translateX(0); transition: transform 0.3s;
+    box-shadow: 4px 0 20px rgba(0,0,0,0.2);
   }
-  
-  /* 手機版收折邏輯：用 transform 移出畫面 */
-  body.menu-collapsed nav.side {
-    transform: translateX(-100%);
-    width: 240px; padding: 16px; opacity: 1; /* 保持內容以免動畫醜 */
-  }
-  
+  body.menu-collapsed nav.side { transform: translateX(-100%); opacity: 1; }
+  main{padding: 16px;}
   .col2{grid-template-columns:1fr}
 }
 </style>
 </head>
-<body class=""> <!-- 預設展開 -->
+<body class="">
 
 <div class="header">
-  <button id="menuToggle" class="btn icon-btn ghost" title="收折/展開目錄">
+  <button id="menuToggle" class="btn icon-btn ghost" title="選單">
     <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
   </button>
-  
   <div class="logo">ICU</div>
   <div class="title-group">
     <h1 class="title">臨床裝置筆記</h1>
-    <div class="subtitle">ECMO · IABP · CVC · A-line · Swan-Ganz · PICC</div>
+    <div class="subtitle">ECMO · IABP · CVC · Swan-Ganz · PICC</div>
   </div>
-
   <div class="controls">
     <button id="toggleTheme" class="btn ghost small">◐</button>
     <button id="printBtn" class="btn ghost small">列印</button>
@@ -160,46 +175,43 @@ li{margin-bottom:6px}
 </div>
 
 <div class="container">
-  <nav class="side" aria-label="裝置目錄">
-    <input id="menuFilter" class="search" placeholder="篩選裝置..." />
+  <nav class="side">
+    <input id="menuFilter" class="search" placeholder="篩選..." />
     <ul id="menuList"></ul>
-    
-    <div style="margin-top:20px; font-size:12px; color:var(--muted); line-height:1.5; border-top:1px dashed rgba(0,0,0,0.1); padding-top:10px">
-      <b>提示：</b><br>
-      點擊左上角 <span style="display:inline-block;border:1px solid #ccc;border-radius:3px;padding:0 4px">☰</span> 可收折目錄。<br>
-      鍵盤 <kbd>→</kbd> <kbd>←</kbd> 可換頁。
-    </div>
   </nav>
 
   <main id="mainContent">
-    <!-- Content injected via JS -->
+    <!-- Pages go here -->
   </main>
 </div>
 
 <script>
-// --- SVG Icons Generators ---
-const svgs = {
-  // Common schematic parts
-};
-
+// --- SVG Generators (Updated for Dark Mode) ---
+// 使用 CSS 變數 (var(--accent), var(--danger)) 讓線條顏色在深色模式下自動變亮
 function getDiagram(type) {
   let inner = '';
+  const accent = 'var(--accent)';
+  const danger = 'var(--danger)';
+  const txtColor = 'currentColor'; // 文字顏色自動跟隨父層
+
   switch(type) {
     case 'ecmo':
       inner = `
-        <text x="10" y="20" font-size="10" fill="currentColor">Venous Drain</text>
-        <path d="M30 30 L30 80 Q30 90 50 90 L100 90" stroke="#0b6fff" stroke-width="4" fill="none"/>
-        <rect x="90" y="75" width="40" height="30" rx="4" fill="var(--accent)" opacity="0.2" stroke="var(--accent)"/>
-        <text x="100" y="93" font-size="8" fill="currentColor">Pump</text>
-        <path d="M130 90 L170 90 Q190 90 190 80 L190 30" stroke="#e11d48" stroke-width="4" fill="none"/>
-        <text x="160" y="20" font-size="10" fill="currentColor">Return</text>
+        <text x="10" y="20" font-size="10" fill="${txtColor}" opacity="0.7">Venous Drain</text>
+        <path d="M30 30 L30 80 Q30 90 50 90 L100 90" stroke="${accent}" stroke-width="4" fill="none"/>
+        <rect x="90" y="75" width="40" height="30" rx="4" fill="${accent}" opacity="0.2" stroke="${accent}"/>
+        <text x="100" y="93" font-size="8" fill="${txtColor}">Pump</text>
+        <path d="M130 90 L170 90 Q190 90 190 80 L190 30" stroke="${danger}" stroke-width="4" fill="none"/>
+        <text x="160" y="20" font-size="10" fill="${txtColor}" opacity="0.7">Return</text>
+        <path d="M110 50 L115 60 L125 40" stroke="${txtColor}" stroke-width="1" opacity="0.5" fill="none"/>
       `; break;
     case 'iabp':
       inner = `
-        <path d="M80 10 Q120 10 120 100" stroke="#e11d48" stroke-width="12" opacity="0.1" fill="none"/>
-        <rect x="115" y="40" width="10" height="40" rx="5" fill="#f59e0b" opacity="0.8"/>
-        <line x1="120" y1="80" x2="120" y2="150" stroke="#666" stroke-width="2"/>
-        <text x="135" y="60" font-size="10" fill="#d97706">Balloon</text>
+        <path d="M80 10 Q120 10 120 100" stroke="${danger}" stroke-width="14" opacity="0.15" fill="none"/>
+        <rect x="115" y="40" width="10" height="40" rx="5" fill="#f59e0b" opacity="0.9"/>
+        <line x1="120" y1="80" x2="120" y2="150" stroke="${txtColor}" stroke-width="2" opacity="0.5"/>
+        <text x="135" y="60" font-size="10" fill="#f59e0b" font-weight="bold">Balloon</text>
+        <text x="50" y="30" font-size="10" fill="${txtColor}" opacity="0.6">Aorta</text>
       `; break;
     case 'cvc':
     case 'hickman':
@@ -208,29 +220,29 @@ function getDiagram(type) {
       let label = type.toUpperCase();
       let path = (type==='picc') ? `M10 60 Q60 60 80 40 L100 30` : (type==='porta' ? `M40 50 L60 40 L100 30` : `M60 10 L60 30 L100 30`);
       inner = `
-        <path d="M100 10 L100 90" stroke="#0b6fff" stroke-width="15" opacity="0.1"/>
-        <text x="110" y="50" font-size="10" fill="currentColor">SVC</text>
+        <path d="M100 10 L100 90" stroke="${accent}" stroke-width="16" opacity="0.15"/>
+        <text x="112" y="50" font-size="10" fill="${txtColor}" opacity="0.6">SVC</text>
         <path d="${path}" stroke="#eab308" stroke-width="3" fill="none"/>
         <circle cx="${type==='porta'?40: (type==='picc'?10:60)}" cy="${type==='porta'?50: (type==='picc'?60:10)}" r="4" fill="#eab308"/>
-        <text x="10" y="90" font-size="12" fill="currentColor" font-weight="bold">${label}</text>
+        <text x="10" y="90" font-size="12" fill="${txtColor}" font-weight="bold">${label}</text>
       `; break;
     case 'aline':
       inner = `
-        <path d="M10 50 L190 50" stroke="#e11d48" stroke-width="10" opacity="0.1"/>
-        <path d="M50 20 L70 50" stroke="#0b6fff" stroke-width="2" fill="none"/>
-        <text x="75" y="35" font-size="10" fill="currentColor">Cannula</text>
-        <path d="M120 30 L130 50 L140 20 L150 60 L160 50 L180 50" stroke="#e11d48" stroke-width="2" fill="none"/>
-        <text x="120" y="80" font-size="10" fill="currentColor">Artery</text>
+        <path d="M10 50 L190 50" stroke="${danger}" stroke-width="12" opacity="0.15"/>
+        <path d="M50 20 L70 50" stroke="${accent}" stroke-width="2" fill="none"/>
+        <text x="40" y="15" font-size="10" fill="${txtColor}">Cannula</text>
+        <path d="M120 30 L130 50 L140 20 L150 60 L160 50 L180 50" stroke="${danger}" stroke-width="2" fill="none"/>
+        <text x="120" y="80" font-size="10" fill="${txtColor}">Arterial BP</text>
       `; break;
     case 'swan':
       inner = `
-        <path d="M10 50 Q50 20 90 50 T170 50" stroke="#0b6fff" stroke-width="10" opacity="0.1" fill="none"/>
+        <path d="M10 50 Q50 20 90 50 T170 50" stroke="${accent}" stroke-width="12" opacity="0.15" fill="none"/>
         <path d="M10 60 Q50 30 90 60 T160 60" stroke="#eab308" stroke-width="3" fill="none" stroke-dasharray="4 2"/>
-        <circle cx="160" cy="60" r="5" fill="#eab308" opacity="0.6"/>
-        <text x="130" y="80" font-size="10" fill="currentColor">Pulmonary A.</text>
+        <circle cx="160" cy="60" r="5" fill="#eab308" opacity="0.8"/>
+        <text x="130" y="85" font-size="10" fill="${txtColor}">Pulmonary A.</text>
       `; break;
     default:
-      inner = `<text x="50" y="50" font-size="12" fill="currentColor">Device Diagram</text>`;
+      inner = `<text x="50" y="50" font-size="12" fill="${txtColor}">Device Diagram</text>`;
   }
   return `<svg viewBox="0 0 200 100" fill="none" stroke="currentColor" style="width:100%;height:100%">${inner}</svg>`;
 }
@@ -331,22 +343,21 @@ const pages = [
 const menu = document.getElementById('menuList');
 const main = document.getElementById('mainContent');
 const toggleBtn = document.getElementById('menuToggle');
+const isMobile = () => window.innerWidth < 768;
 
 // Toggle Menu
 toggleBtn.addEventListener('click', () => {
   document.body.classList.toggle('menu-collapsed');
 });
-// Mobile: close menu after click
-const isMobile = () => window.innerWidth < 768;
 
-// Build Content
+// Build Pages
 pages.forEach((p, idx)=>{
   // Menu Item
   const li = document.createElement('li');
   li.innerHTML = `<a href="#${p.id}" data-id="${p.id}">${p.title}</a>`;
   menu.appendChild(li);
 
-  // Page Content
+  // Content
   const prev = idx > 0 ? pages[idx-1].id : null;
   const next = idx < pages.length-1 ? pages[idx+1].id : null;
   
@@ -354,8 +365,8 @@ pages.forEach((p, idx)=>{
   article.className = 'page';
   article.id = 'page-'+p.id;
   article.innerHTML = `
-    <h2 style="margin-bottom:4px;font-size:24px">${p.title}</h2>
-    <div style="color:var(--muted);margin-bottom:20px;font-weight:500">${p.short}</div>
+    <h2 style="font-size:24px;margin-bottom:4px">${p.title}</h2>
+    <div style="color:var(--text-muted);margin-bottom:20px;font-weight:500;font-size:14px">${p.short}</div>
 
     <div class="diagram-box">
       ${getDiagram(p.id)}
@@ -388,8 +399,8 @@ pages.forEach((p, idx)=>{
       </div>
     </div>
 
-    <div class="card" style="background:var(--bg)">
-      <div class="section-title">護理重點 (Care)</div>
+    <div class="card">
+      <div class="section-title" style="color:var(--text-muted)">護理重點 (Care)</div>
       <div class="text">${p.content.care}</div>
     </div>
 
@@ -403,7 +414,7 @@ pages.forEach((p, idx)=>{
   main.appendChild(article);
 });
 
-// Navigation Functions
+// Navigation
 const showPage = (id) => {
   document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('#menuList a').forEach(el => el.classList.remove('active'));
@@ -417,7 +428,6 @@ const showPage = (id) => {
   if(isMobile()) document.body.classList.add('menu-collapsed');
 };
 
-// Event Listeners
 document.body.addEventListener('click', (e) => {
   if(e.target.matches('#menuList a')) {
     e.preventDefault();
@@ -432,33 +442,23 @@ if(isMobile()) document.body.classList.add('menu-collapsed');
 const hash = location.hash.replace('#','');
 showPage(hash || pages[0].id);
 
-// Keyboard & Tools
-document.addEventListener('keydown', (e)=>{
-  const active = document.querySelector('.page.active');
-  if(!active) return;
-  const idx = pages.findIndex(p => p.id === active.id.replace('page-',''));
-  if(e.key === 'ArrowRight' && idx < pages.length-1) showPage(pages[idx+1].id);
-  if(e.key === 'ArrowLeft' && idx > 0) showPage(pages[idx-1].id);
+// Utils
+document.getElementById('toggleTheme').addEventListener('click', ()=>{
+  const html = document.documentElement;
+  html.setAttribute('data-theme', html.hasAttribute('data-theme') ? '' : 'dark');
 });
-
 document.getElementById('menuFilter').addEventListener('input', (e)=>{
   const term = e.target.value.toLowerCase();
   document.querySelectorAll('#menuList li').forEach(li => {
     li.style.display = li.innerText.toLowerCase().includes(term) ? '' : 'none';
   });
 });
-
-document.getElementById('toggleTheme').addEventListener('click', ()=>{
-  const html = document.documentElement;
-  html.setAttribute('data-theme', html.hasAttribute('data-theme') ? '' : 'dark');
-});
-
-document.getElementById('printBtn').addEventListener('click', ()=>window.print());
-document.getElementById('exportBtn').addEventListener('click', ()=>{
-  let txt = pages.map(p => `=== ${p.title} ===\n${document.getElementById('page-'+p.id).innerText}`).join('\n\n');
-  const a = document.createElement('a'); 
-  a.href=URL.createObjectURL(new Blob([txt],{type:'text/plain'}));
-  a.download="Medical_Notes.txt"; a.click();
+document.addEventListener('keydown', (e)=>{
+  const active = document.querySelector('.page.active');
+  if(!active) return;
+  const idx = pages.findIndex(p => p.id === active.id.replace('page-',''));
+  if(e.key === 'ArrowRight' && idx < pages.length-1) showPage(pages[idx+1].id);
+  if(e.key === 'ArrowLeft' && idx > 0) showPage(pages[idx-1].id);
 });
 </script>
 </body>
