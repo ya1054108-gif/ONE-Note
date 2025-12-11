@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>臨床裝置完全筆記 — ECMO · IABP · CVC · A-line · Swan-Ganz · Hickman · Double-lumen · PICC · Port-A</title>
-<meta name="description" content="極為詳細的 ICU / 術中裝置筆記：每個項目含建置步驟、監測、併發症、護理重點與比較表。內建下一頁按鈕與列印/下載功能。" />
+<meta name="description" content="極為詳細的 ICU / 術中裝置筆記：含解剖示意圖、位置、作用、適應症、禁忌症與併發症。" />
 <style>
 :root{
   --bg:#f4f7fb; --card:#fff; --muted:#6b7280; --accent:#0b6fff; --danger:#b62525; --ok:#00796b;
@@ -15,47 +15,68 @@
   --bg:#071124; --card:#0b1622; --muted:#9aa4b2; --accent:#6ea8ff; --danger:#ff7b7b; --ok:#4bd1b2; --glass: rgba(255,255,255,0.02);
 }
 *{box-sizing:border-box}
-body{font-family: -apple-system, "Segoe UI", Roboto, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", Arial; margin:0; background:linear-gradient(180deg,var(--bg), #eaf2ff); color:#06122a; padding:22px; line-height:1.55}
+body{font-family: -apple-system, "Segoe UI", Roboto, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", Arial; margin:0; background:linear-gradient(180deg,var(--bg), #eaf2ff); color:#06122a; padding:22px; line-height:1.6}
 .header{display:flex;align-items:center;gap:16px;margin-bottom:18px}
-.logo{width:60px;height:60px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#2cc0ff);display:flex;align-items:center;justify-content:center;color:white;font-weight:800;box-shadow:0 8px 28px rgba(11,111,255,0.12)}
+.logo{width:60px;height:60px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#2cc0ff);display:flex;align-items:center;justify-content:center;color:white;font-weight:800;box-shadow:0 8px 28px rgba(11,111,255,0.12);flex-shrink:0}
 .title{font-size:18px;margin:0}
 .subtitle{color:var(--muted);font-size:13px;margin:0}
-.controls{margin-left:auto;display:flex;gap:8px;align-items:center}
+.controls{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .btn{background:var(--accent);color:white;padding:8px 10px;border-radius:8px;border:none;cursor:pointer;font-weight:600}
 .btn.ghost{background:transparent;color:var(--accent);border:1px solid rgba(11,111,255,0.12)}
 .small{font-size:13px;padding:6px 10px}
 .container{display:grid;grid-template-columns:300px 1fr;gap:18px}
-nav.side{background:var(--card);padding:14px;border-radius:12px;box-shadow:0 8px 30px rgba(2,6,23,0.04);height:calc(100vh - 140px);overflow:auto}
+nav.side{background:var(--card);padding:14px;border-radius:12px;box-shadow:0 8px 30px rgba(2,6,23,0.04);height:calc(100vh - 140px);overflow:auto;position:sticky;top:20px}
 nav.side h3{margin:0 0 8px 0}
 nav.side ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
-nav.side a{display:block;padding:8px 10px;border-radius:8px;color:var(--accent);text-decoration:none;font-weight:600}
+nav.side a{display:block;padding:8px 10px;border-radius:8px;color:var(--accent);text-decoration:none;font-weight:600;transition:0.2s}
 nav.side a.active{background:linear-gradient(90deg, rgba(11,111,255,0.08), transparent);color:var(--accent);box-shadow:inset 0 -1px 0 rgba(11,111,255,0.03)}
-main{padding:18px;background:var(--card);border-radius:12px;box-shadow:0 8px 30px rgba(2,6,23,0.04);min-height:70vh;overflow:auto}
-.page{display:none}
+nav.side a:hover{background:rgba(11,111,255,0.04)}
+main{padding:24px;background:var(--card);border-radius:12px;box-shadow:0 8px 30px rgba(2,6,23,0.04);min-height:70vh;overflow:auto}
+.page{display:none;animation:fadeIn 0.3s ease}
 .page.active{display:block}
-.section{margin-bottom:12px}
-.h4{font-size:16px;margin:0 0 8px 0}
-.meta{color:var(--muted);font-size:13px;margin-bottom:6px}
-.card{background:linear-gradient(180deg,var(--card),#fbfeff);padding:12px;border-radius:10px;border:1px solid rgba(11,17,32,0.03)}
-.col2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.table{width:100%;border-collapse:collapse;font-size:13px}
-.table th{ text-align:left;padding:8px;border-bottom:2px solid rgba(11,17,32,0.06);background:transparent}
-.table td{padding:8px;border-top:1px dashed rgba(11,17,32,0.04)}
+@keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
+.section-title{
+  font-size: 15px; font-weight: 700; color: var(--accent); margin-bottom: 8px;
+  display:flex; align-items:center; gap:8px; text-transform:uppercase; letter-spacing:0.5px;
+}
+.section-title::before{content:'';display:block;width:4px;height:16px;background:var(--accent);border-radius:2px}
+
+.card{background:linear-gradient(180deg,var(--card),#fbfeff);padding:16px;border-radius:12px;border:1px solid rgba(11,17,32,0.05);margin-bottom:16px}
+.col2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .kv{display:flex;gap:8px;align-items:flex-start}
-.kv b{min-width:120px;display:inline-block}
-.footerActions{display:flex;gap:8px;margin-top:12px}
-.nextbtn{margin-left:auto}
+.kv b{min-width:120px;display:inline-block;color:var(--muted)}
+ul, ol{padding-left:20px;margin:0}
+li{margin-bottom:6px}
+
+/* Visuals */
+.diagram-box{
+  background: var(--bg); border-radius: 12px; padding: 20px; 
+  display: flex; justify-content: center; align-items: center; margin-bottom: 20px;
+  border: 1px dashed rgba(11,111,255,0.2); position:relative; overflow:hidden;
+}
+.diagram-box svg{max-height:180px; width:100%;}
+.diagram-caption{font-size:12px; text-align:center; color:var(--muted); margin-top:8px; font-style:italic;}
+
+/* Table Styles */
+.table{width:100%;border-collapse:collapse;font-size:14px}
+.table th{text-align:left;padding:10px;border-bottom:2px solid rgba(11,17,32,0.06);color:var(--muted)}
+.table td{padding:10px;border-top:1px dashed rgba(11,17,32,0.04)}
+.badge{display:inline-block;padding:4px 8px;border-radius:999px;background:rgba(11,111,255,0.08);color:var(--accent);font-weight:700;font-size:12px;margin-left:8px}
+
+.footerActions{display:flex;gap:8px;margin-top:24px;border-top:1px solid rgba(0,0,0,0.05);padding-top:16px}
 .search{width:100%;padding:8px;border-radius:8px;border:1px solid rgba(11,17,32,0.06);margin-bottom:12px}
-.code{background:#0f1724;color:#e6f2ff;padding:10px;border-radius:8px;font-family:var(--mono);font-size:13px;overflow:auto}
-.callout{background:linear-gradient(90deg, rgba(11,111,255,0.06), transparent);padding:10px;border-radius:8px;border:1px solid rgba(11,111,255,0.06);color:var(--muted)}
-.compare{overflow:auto;border-radius:8px}
-.compare table{width:100%;border-collapse:collapse}
-.compare th, .compare td{padding:8px;border:1px solid rgba(11,17,32,0.06);font-size:13px}
-.badge{display:inline-block;padding:4px 8px;border-radius:999px;background:rgba(11,111,255,0.08);color:var(--accent);font-weight:700;font-size:12px}
-@media (max-width:980px){.container{grid-template-columns:1fr;}.header{flex-wrap:wrap}.logo{width:48px;height:48px}}
+
+/* Print & Responsive */
+@media (max-width:980px){.container{grid-template-columns:1fr;}.header{flex-wrap:wrap}.logo{width:48px;height:48px}.col2{grid-template-columns:1fr}}
 @media print{
   nav.side, .controls, .btn{display:none}
-  body{background:white;padding:6mm}
+  body{background:white;padding:0}
+  .container{display:block}
+  main{box-shadow:none;border:none}
+  .page{display:block;page-break-after:always}
+  .page:last-child{page-break-after:auto}
+  .diagram-box{border:1px solid #eee}
 }
 </style>
 </head>
@@ -63,557 +84,392 @@ main{padding:18px;background:var(--card);border-radius:12px;box-shadow:0 8px 30p
 <div class="header">
   <div class="logo">ICU</div>
   <div>
-    <h1 class="title">臨床裝置完全筆記（極詳版）</h1>
-    <div class="subtitle">ECMO / IABP / CVC / A-line / Swan-Ganz / Hickman / Double-lumen / PICC / Port-A — 每頁含建置步驟、監測、護理與 QA。</div>
+    <h1 class="title">臨床裝置完全筆記</h1>
+    <div class="subtitle">ECMO · IABP · CVC · A-line · Swan-Ganz · Hickman · Double-lumen · PICC · Port-A</div>
   </div>
 
   <div class="controls">
-    <input id="globalSearch" class="search small" placeholder="在本頁搜尋（裝置名稱、併發症、插管位置等）" />
-    <button id="toggleTheme" class="btn ghost small" title="切換深色模式">深色/亮色</button>
-    <button id="printBtn" class="btn small">列印</button>
-    <button id="exportBtn" class="btn small">下載 TXT</button>
+    <input id="globalSearch" class="search small" placeholder="搜尋內容..." />
+    <button id="toggleTheme" class="btn ghost small" title="切換模式">深色/亮色</button>
+    <button id="printBtn" class="btn small">列印全書</button>
+    <button id="exportBtn" class="btn small">下載文字檔</button>
   </div>
 </div>
 
 <div class="container">
   <nav class="side" aria-label="裝置目錄">
     <h3>目錄</h3>
-    <input id="menuFilter" class="search" placeholder="快速找裝置或關鍵字..." />
-    <ul id="menuList">
-      <!-- will be generated -->
-    </ul>
+    <input id="menuFilter" class="search" placeholder="篩選裝置..." />
+    <ul id="menuList"></ul>
     <hr style="margin:12px 0;border:none;border-top:1px dashed rgba(11,17,32,0.06)" />
-    <div class="callout"><b>使用提示：</b> 每頁右下方有「上一頁 / 下一頁」；頁面內容可列印或下載純文字存檔作為教學講義。</div>
+    <div style="font-size:12px;color:var(--muted);padding:0 8px">
+      使用提示：左側選擇裝置，右側檢視詳情。支援鍵盤左右鍵切換頁面。
+    </div>
   </nav>
 
   <main id="mainContent">
-    <!-- pages injected by JS -->
+    <!-- Content injected via JS -->
   </main>
 </div>
 
 <script>
-// --- Data for pages (very detailed notes per device) ---
+// --- SVG Icons Generators (Inline visuals) ---
+const svgs = {
+  heart: `<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2"><path d="M50 30 L50 85 M20 40 Q50 10 80 40 T50 85 T20 40" stroke="#e11d48" fill="rgba(225,29,72,0.1)"/><path d="M50 30 L50 85" stroke="#e11d48"/></svg>`,
+  vessels: `<svg viewBox="0 0 200 100" fill="none" stroke="currentColor"><path d="M20 50 Q100 20 180 50" stroke="#0b6fff" stroke-width="8" opacity="0.2"/><path d="M20 60 Q100 30 180 60" stroke="#e11d48" stroke-width="8" opacity="0.2"/></svg>`,
+  catheter: (color='#0b6fff') => `<path d="M40 10 L40 80 Q40 90 50 90 L160 90" stroke="${color}" stroke-width="3" fill="none" stroke-dasharray="4 2"/>`
+};
+
+function getDiagram(type) {
+  let inner = '';
+  // Simple schematic generation
+  switch(type) {
+    case 'ecmo':
+      inner = `
+        <text x="10" y="20" font-size="10" fill="currentColor">Drainage (Venous)</text>
+        <path d="M30 30 L30 80 Q30 90 50 90 L100 90" stroke="#0b6fff" stroke-width="4" fill="none" marker-end="url(#arrow)"/>
+        <rect x="100" y="70" width="40" height="40" rx="4" fill="var(--accent)" opacity="0.2" stroke="var(--accent)"/>
+        <text x="105" y="95" font-size="8" fill="currentColor">Pump/O2</text>
+        <path d="M140 90 L170 90 Q190 90 190 80 L190 30" stroke="#e11d48" stroke-width="4" fill="none"/>
+        <text x="160" y="20" font-size="10" fill="currentColor">Return (Art/Ven)</text>
+      `;
+      break;
+    case 'iabp':
+      inner = `
+        <path d="M80 10 Q120 10 120 100" stroke="#e11d48" stroke-width="12" opacity="0.1" fill="none"/>
+        <text x="130" y="30" font-size="10" fill="currentColor">Aorta</text>
+        <rect x="115" y="40" width="10" height="40" rx="5" fill="#f59e0b" opacity="0.8"/>
+        <line x1="120" y1="80" x2="120" y2="150" stroke="#666" stroke-width="2"/>
+        <text x="135" y="60" font-size="10" fill="#d97706">Balloon (Diastole)</text>
+      `;
+      break;
+    case 'cvc':
+    case 'hickman':
+    case 'picc':
+    case 'porta':
+      let label = type.toUpperCase();
+      let path = '';
+      if(type==='picc') path = `M10 60 Q60 60 80 40 L100 30`; // Arm to SVC
+      else if(type==='porta') path = `M40 50 L60 40 L100 30`; // Chest to SVC
+      else path = `M60 10 L60 30 L100 30`; // Neck to SVC
+      inner = `
+        <path d="M100 10 L100 90" stroke="#0b6fff" stroke-width="15" opacity="0.1"/>
+        <text x="110" y="50" font-size="10" fill="currentColor">SVC</text>
+        <path d="${path}" stroke="#eab308" stroke-width="3" fill="none"/>
+        <circle cx="${type==='porta'?40: (type==='picc'?10:60)}" cy="${type==='porta'?50: (type==='picc'?60:10)}" r="4" fill="#eab308"/>
+        <text x="10" y="90" font-size="12" fill="currentColor" font-weight="bold">${label}</text>
+      `;
+      break;
+    case 'aline':
+      inner = `
+        <path d="M10 50 L190 50" stroke="#e11d48" stroke-width="10" opacity="0.1"/>
+        <text x="10" y="40" font-size="10" fill="currentColor">Artery (Radial/Fem)</text>
+        <path d="M50 20 L70 50" stroke="#0b6fff" stroke-width="2" fill="none"/>
+        <rect x="40" y="10" width="20" height="10" fill="#0b6fff"/>
+        <text x="75" y="35" font-size="10" fill="currentColor">Cannula</text>
+        <path d="M120 30 L130 50 L140 20 L150 60 L160 50 L180 50" stroke="#e11d48" stroke-width="2" fill="none"/>
+        <text x="120" y="80" font-size="10" fill="currentColor">Waveform</text>
+      `;
+      break;
+    default:
+      inner = `<text x="50" y="50" font-size="12" fill="currentColor">System Diagram</text>`;
+  }
+  return `<svg viewBox="0 0 200 100" fill="none" stroke="currentColor" style="width:100%;height:100%">${inner}</svg>`;
+}
+
+// --- Data Content (Updated with 5 sections) ---
 const pages = [
   {
     id: 'ecmo',
-    title: 'ECMO（體外膜氧合 / 含 PCPS）',
-    short: '氧合與/或循環支援；VA 與 VV 模式',
-    content: `
-      <div class="section card">
-        <h4 class="h4">定義</h4>
-        <div class="meta">體外膜氧合利用離心幫浦與膜式氧合器替代或支援肺/心功能。PCPS 多指經皮快速建立的 VA-ECMO，用於救循環。</div>
-      </div>
-
-      <div class="section card">
-        <h4 class="h4">主要構成</h4>
-        <div class="kv"><b>元件</b><div>靜脈引流管、離心幫浦、膜式氧合器、熱交換器、回輸管、監測器、氧氣供應與 console。</div></div>
-      </div>
-
-      <div class="section card">
-        <h4 class="h4">適應症</h4>
-        <ul>
-          <li><b>VV-ECMO：</b>重症 ARDS、嚴重肺損傷、難治性低氧（PaO₂/FiO₂ 低）、高 CO₂ 且通氣無效。</li>
-          <li><b>VA-ECMO / PCPS：</b>心因性休克、ECPR（CPR 中/CPR 後無 ROSC）、嚴重心肌炎、術後循環支持、電風暴。</li>
-        </ul>
-      </div>
-
-      <div class="section card col2">
-        <div>
-          <h4 class="h4">常見插管與配置</h4>
-          <table class="table"><tr><td><b>VA</b></td><td>股靜脈（引流）→ 股動脈（回輸）；可選中心回輸或腋/鎖骨下回輸。</td></tr>
-          <tr><td><b>VV</b></td><td>股靜脈→頸靜脈，或雙腔（Avalon）置於右內頸。</td></tr></table>
-        </div>
-        <div>
-          <h4 class="h4">建置要點</h4>
-          <ol>
-            <li>無菌床邊或導管室；團隊：ICU 醫師、護理、心外或血管介入。</li>
-            <li>使用 Seldinger 技術或外科切開，選擇適當管徑提供足夠流量（≥3–5 L/min）。</li>
-            <li>設定抗凝（Heparin），目標 ACT/aPTT 由院方 protocol 決定。</li>
-            <li>持續監測 Pump flow、pre/post oxygenator 壓力、氧合（SaO₂）、乳酸、尿量。</li>
-          </ol>
-        </div>
-      </div>
-
-      <div class="section card">
-        <h4 class="h4">常見併發症</h4>
-        <ul>
-          <li>出血（手術針孔、管路、腦出血）</li>
-          <li>下肢缺血（VA, 需 distal perfusion cannula）</li>
-          <li>血栓栓塞、溶血、感染</li>
-          <li>氧合器故障、幫浦故障、LV overload（需要 LV vent）</li>
-        </ul>
-      </div>
-
-      <div class="section card">
-        <h4 class="h4">護理與維護</h4>
-        <ul>
-          <li>每班檢查 flow / sweep / FiO₂ / 輸入輸出、血氣、ACT。維持無菌敷料。</li>
-          <li>若疑似氧合器故障或 hemolysis（紅褐色血）、立即通知醫師並切換備用氧合器。</li>
-          <li>預防下肢缺血：監測末梢溫度、Doppler 血流、必要時放 distal perfusion。</li>
-        </ul>
-      </div>
-
-      <div class="section card">
-        <h4 class="h4">常見臨床 Q&A</h4>
-        <ol>
-          <li><b>何時加 LV vent？</b> 當 LV 過度沒法前負荷出流、肺水腫或 LV 壓力過高時評估放 vent。</li>
-          <li><b>如何處理氧合器血塊？</b> 依院方 protocol：換氧合器或血栓溶解，必要時轉 OR。</li>
-        </ol>
-      </div>
-    `
+    title: 'ECMO (體外膜氧合)',
+    short: 'VA/VV · Life Support',
+    content: {
+      location: '<b>VA-ECMO</b>：通常由股靜脈 (Drainage) 引流，經股動脈 (Return) 回輸（亦可採頸部或開胸）。<br><b>VV-ECMO</b>：股靜脈引流→頸靜脈回輸，或使用雙腔導管 (Avalon) 於右內頸靜脈。',
+      function: '利用離心幫浦與膜式氧合器（人工肺）取代心臟與肺臟功能。<br><b>VA</b>：取代心肺功能（提供血流 + 氧合）。<br><b>VV</b>：僅取代肺臟功能（提供氧合 + 排除 CO₂），依賴病人自身心輸出。',
+      indication: '<ul><li><b>VA</b>：心因性休克、ECPR (CPR無效)、嚴重心肌炎、術後無法脫離體外循環。</li><li><b>VV</b>：重度 ARDS、嚴重呼吸衰竭 (PaO₂/FiO₂ < 80)、高二氧化碳血症且呼吸器無效。</li></ul>',
+      contraindication: '<ul><li>絕對：末期疾病無法復原者、不可逆腦傷、無人目擊的心跳停止（相對）。</li><li>相對：嚴重出血傾向、主動脈剝離 (VA)、嚴重免疫抑制。</li></ul>',
+      complication: '<ul><li><b>出血</b>：全身肝素化導致手術部位或腦出血。</li><li><b>下肢缺血</b> (VA)：股動脈插管阻塞血流，需加裝遠端灌流管 (DPC)。</li><li><b>血栓/溶血</b>：氧合器血栓或幫浦破壞紅血球。</li><li><b>感染</b>：管路相關血流感染。</li></ul>',
+      care: '每班監測 Flow, RPM, Pre/Post 壓力 (Delta P), SpO₂ 與 SvO₂。維持 ACT 目標值。注意管路顏色（鮮紅/暗紅區分）與有無氣泡。'
+    }
   },
-
   {
     id: 'iabp',
-    title: 'IABP（主動脈內氣球幫浦）',
-    short: '舒張期增壓 & 收縮期降負荷；提高冠灌流、減少後負荷',
-    content: `
-      <div class="section card">
-        <h4 class="h4">定義與機轉</h4>
-        <div class="meta">IABP 在舒張期充氣（diastolic augmentation）增加冠灌流，於收縮期洩氣降低 afterload，改善 myocardial oxygen supply/demand。</div>
-      </div>
-
-      <div class="section card">
-        <h4 class="h4">適應症</h4>
-        <ul>
-          <li>心源性休克（短期循環支持）</li>
-          <li>AMI 合併嚴重左心功能不全</li>
-          <li>PCI 或術後短期 hemodynamic support</li>
-          <li>心肌梗塞合併 mechanical complication（臨時支撐）</li>
-        </ul>
-      </div>
-
-      <div class="section card col2">
-        <div>
-          <h4 class="h4">插入 & 定位</h4>
-          <p class="meta">通常由股動脈逆行送入，氣球尖端放在左鎖骨下動脈分支下方約 2–3 cm；X-ray 或透視確認位置。</p>
-        </div>
-        <div>
-          <h4 class="h4">設定要點</h4>
-          <ul>
-            <li>氣球充氣介質常用氦（反應快、質量輕）</li>
-            <li>trigger：ECG（R波）或 A-line，依情況選擇</li>
-            <li>常見比例 1:1（最強支撐），逐步降至 1:2 / 1:3 檢查能否脫離</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="section card">
-        <h4 class="h4">監測重點</h4>
-        <ul>
-          <li>A-line 波形（看 augmentation 是否明顯）</li>
-          <li>肢體末梢灌流（腳趾溫度、capillary refill）</li>
-          <li>尿量、乳酸、MAP、心律</li>
-        </ul>
-      </div>
-
-      <div class="section card">
-        <h4 class="h4">併發症與處理</h4>
-        <ul>
-          <li>下肢缺血：最常見，需立即評估遠端灌流</li>
-          <li>氣球破裂或漏氣：立即停用並拔出</li>
-          <li>血管損傷、血腫、感染、血小板減少</li>
-        </ul>
-      </div>
-
-      <div class="section card">
-        <h4 class="h4">移除與拔管準備</h4>
-        <ol>
-          <li>當 hemodynamics 穩定、vasopressor 顯著減少、尿量及乳酸改善可考慮</li>
-          <li>調整到較低比例觀察（1:3），無不穩再拔出</li>
-          <li>拔後須長時間壓迫止血並觀察肢體灌流</li>
-        </ol>
-      </div>
-    `
+    title: 'IABP (主動脈內氣球幫浦)',
+    short: 'Counter-pulsation',
+    content: {
+      location: '由<b>股動脈</b> (最常見) 置入，氣球尖端應位於<b>左鎖骨下動脈 (L. subclavian a.) 下方 2-3 cm</b>，末端位於腎動脈開口上方。',
+      function: '<b>反搏原理 (Counter-pulsation)</b>：<br>1. <b>舒張期充氣</b>：增加主動脈根部壓力 → 增加冠狀動脈灌流。<br>2. <b>收縮期洩氣</b>：產生負壓效應 → 降低後負荷 (Afterload) → 減少左心室做功。',
+      indication: '<ul><li>心因性休克 (Cardiogenic shock)。</li><li>急性心肌梗塞併發乳頭肌斷裂或 VSD。</li><li>高風險 PCI 術中支持、CABG 術前/術後支持。</li><li>難治性不穩定心絞痛。</li></ul>',
+      contraindication: '<ul><li><b>絕對：主動脈瓣閉鎖不全 (AR)</b> — 會加重逆流。</li><li><b>絕對：主動脈剝離 (Dissection)</b>。</li><li>嚴重腹主動脈瘤、嚴重周邊血管阻塞疾病。</li></ul>',
+      complication: '<ul><li><b>下肢缺血</b> (最常見)：注意足背動脈搏動、膚色溫。</li><li>血管損傷/剝離/穿孔。</li><li>血小板減少 (Thrombocytopenia)。</li><li>氣球破裂 (導管內出現血液)。</li></ul>',
+      care: '固定下肢不可彎曲。監測 Augmentation 波形與時機 (Timing)。觀察尿量 (避免擋住腎動脈) 與左手脈搏 (避免氣球過高擋住鎖骨下動脈)。'
+    }
   },
-
   {
     id: 'cvc',
-    title: 'CVC（中央靜脈導管）',
-    short: '內頸/鎖骨下/股靜脈的中心通路，用於中心輸注與監測',
-    content: `
-      <div class="section card">
-        <h4 class="h4">定義與用途</h4>
-        <div class="meta">CVC 用於中心靜脈壓監測、大量輸液、血液透析、快速輸血以及高滲藥物。通常為多人組成操作團隊置入。</div>
-      </div>
-
-      <div class="section card">
-        <h4 class="h4">常見部位與特性</h4>
-        <table class="table">
-          <tr><td><b>內頸靜脈（IJ）</b></td><td>易超音波導引、較易壓迫止血，但頸部活動較影響位置。</td></tr>
-          <tr><td><b>鎖骨下（Subclavian）</b></td><td>穿刺舒適度高、感染率低，但氣胸風險較高。</td></tr>
-          <tr><td><b>股靜脈（Femoral）</b></td><td>快速可得，術中常用，但感染率較高且不利移動病人。</td></tr>
-        </table>
-      </div>
-
-      <div class="section card">
-        <h4 class="h4">置管流程（超簡化護理步驟）</h4>
-        <ol>
-          <li>無菌操作台準備、超音波定位血管（若可）。</li>
-          <li>Seldinger 流程（穿刺→導絲→擴張→導管→縫合固定）。</li>
-          <li>透視或 X-ray 確認尖端位置（SVC / cavo-atrial junction）。</li>
-        </ol>
-      </div>
-
-      <div class="section card">
-        <h4 class="h4">併發症與預防</h4>
-        <ul>
-          <li>氣胸/血胸（鎖骨下/內頸）— 超音波 + 透視可減少</li>
-          <li>感染（CLABSI）— 無菌換藥、洗手、抗菌敷料</li>
-          <li>導管相關血栓— 監測腫脹、疼痛、回流不良</li>
-        </ul>
-      </div>
-
-      <div class="section card">
-        <h4 class="h4">護理要點</h4>
-        <ul>
-          <li>定期更換敷料（依院方 protocol）並觀察滲血/感染徵象。</li>
-          <li>flush 與 lock（NS 或 heparin）依導管型號。</li>
-          <li>拔管時請病人屏氣或配合 Valsalva，拔除後壓迫止血並密切觀察。</li>
-        </ul>
-      </div>
-    `
+    title: 'CVC (中心靜脈導管)',
+    short: 'Central Line',
+    content: {
+      location: '常見穿刺位：<b>內頸靜脈 (IJV)</b>、<b>鎖骨下靜脈 (SCV)</b>、<b>股靜脈 (Femoral)</b>。<br>尖端位置：上腔靜脈 (SVC) 與右心房交界處 (Cavo-atrial junction)。',
+      function: '提供大管徑靜脈通道，用於：<br>1. 監測中心靜脈壓 (CVP)。<br>2. 輸注高滲透壓液體 (TPN)、血管加壓劑 (Inotropes)、化療藥。<br>3. 急救大量輸液。',
+      indication: '<ul><li>周邊血管難以建立通道。</li><li>需長期給予刺激性藥物或高濃度營養液。</li><li>血液動力學不穩需監測 CVP。</li></ul>',
+      contraindication: '<ul><li>穿刺部位感染。</li><li>嚴重凝血功能異常 (相對，IJV/Femoral 較安全因為可壓迫)。</li><li>同側氣胸或肺部手術 (避免 SCV)。</li></ul>',
+      complication: '<ul><li><b>氣胸/血胸</b>：尤以 SCV 穿刺風險較高。</li><li><b>心律不整</b>：導絲或導管過深刺激右心房。</li><li><b>感染 (CLABSI)</b>：中心導管相關血流感染。</li><li>空氣栓塞。</li></ul>',
+      care: '落實無菌換藥 (Bundle care)。每班確認回血順暢。未用管腔需依 Protocol 沖洗 (Flush) 或封管 (Lock)。'
+    }
   },
-
   {
     id: 'aline',
-    title: 'A-line（Arterial Line）',
-    short: '即時動脈血壓監測與反覆 ABG 的通道',
-    content: `
-      <div class="section card">
-        <h4 class="h4">定義與主要用途</h4>
-        <div class="meta">A-line 提供 beat-to-beat 動脈壓力監測（MAP）與方便抽取動脈血氣（ABG），是重症與麻醉常用監測。</div>
-      </div>
-
-      <div class="section card col2">
-        <div>
-          <h4 class="h4">常見置放部位</h4>
-          <ul>
-            <li>橈動脈（Radial）— 最常用，易壓迫止血</li>
-            <li>股動脈（Femoral）— 休克或需要較大流量時</li>
-            <li>足背/脛後（Dorsalis pedis / Posterior tibial）— 替代位</li>
-          </ul>
-        </div>
-        <div>
-          <h4 class="h4">Waveform 與校正</h4>
-          <p class="meta">注意 dicrotic notch、systolic upstroke 與 damping（under/over）。Transducer 對準 phlebostatic axis（第4肋間腋中線）並定期 zero。</p>
-        </div>
-      </div>
-
-      <div class="section card">
-        <h4 class="h4">常見問題</h4>
-        <ul>
-          <li>測值不準：先檢查管路阻尼（air bubble / blood clot / long tubing）與 transducer 高度。</li>
-          <li>血管閉塞或缺血：立即評估末梢灌流並考慮移除。</li>
-        </ul>
-      </div>
-
-      <div class="section card">
-        <h4 class="h4">護理與維護</h4>
-        <ul>
-          <li>保持壓力包（300 mmHg）、每日檢查波形、定期 zero。</li>
-          <li>抽血采樣時避免產生 air embolism，使用 closed system。</li>
-        </ul>
-      </div>
-    `
+    title: 'A-line (動脈導管)',
+    short: 'IBP Monitoring',
+    content: {
+      location: '首選：<b>橈動脈 (Radial a.)</b>。<br>次選：股動脈 (Femoral)、足背動脈 (Dorsalis pedis)、肱動脈 (Brachial)。',
+      function: '1. <b>即時血壓監測</b> (Beat-to-beat)：比壓脈帶準確，尤其在休克時。<br>2. <b>頻繁抽血</b>：便於抽取動脈血氣分析 (ABG) 與其他檢驗，減少病人疼痛。',
+      indication: '<ul><li>血流動力學不穩，需使用升壓劑/降壓劑。</li><li>術中/術後重症監測。</li><li>需頻繁監測動脈血氣體 (呼吸衰竭)。</li></ul>',
+      contraindication: '<ul><li>穿刺部位感染或周邊血管疾病 (PVD)。</li><li>Allen\'s Test 異常 (代表側支循環不良，不建議打橈動脈)。</li></ul>',
+      complication: '<ul><li><b>血栓/栓塞</b>：導致遠端肢體缺血壞死 (Ischemia)。</li><li>出血/血腫。</li><li>感染。</li><li>意外注射藥物 (動脈給藥可能導致組織壞死)。</li></ul>',
+      care: '維持加壓袋壓力 300mmHg。Transducer 對齊第 4 肋間腋中線 (Phlebostatic axis)。觀察波形 (Damping) 與末梢循環 (C.R.T, 溫度)。'
+    }
   },
-
   {
     id: 'swan',
-    title: 'Swan-Ganz（肺動脈導管 / PAC）',
-    short: '精準血流動力學監測：PA 壓、PCWP 與 CO',
-    content: `
-      <div class="section card">
-        <h4 class="h4">用途</h4>
-        <div class="meta">提供 RAP / RV / PA / PAWP（PCWP）與心輸出量（thermodilution），用于複雜循環管理。</div>
-      </div>
-
-      <div class="section card">
-        <h4 class="h4">使用情境</h4>
-        <ul>
-          <li>嚴重心衰、複雜心臟手術、難治性休克、需精確醫療調整血管阻力/填充量時。</li>
-        </ul>
-      </div>
-
-      <div class="section card">
-        <h4 class="h4">置管與風險</h4>
-        <ul>
-          <li>藉 IJ 或 FV 置入導管，吹風球前進至 PA；需熟練操作。</li>
-          <li>併發症：肺出血、PA rupture（危及生命）、心律不整、感染、血栓。</li>
-        </ul>
-      </div>
-
-      <div class="section card">
-        <h4 class="h4">臨床監測要點</h4>
-        <ul>
-          <li>定期測 PAWP、PA 壓、CO；根據數值調整用藥（inotrope / vasopressor / diuretic）。</li>
-        </ul>
-      </div>
-    `
+    title: 'Swan-Ganz (肺動脈導管)',
+    short: 'PAC · Hemodynamics',
+    content: {
+      location: '經由大靜脈 (IJV/SCV) → RA → RV → PA → 嵌塞於肺小動脈 (PAWP)。',
+      function: '測量複雜血流動力學參數：CVP, PAP, PCWP (反映左心前負荷), CO (心輸出量), SVR (血管阻力), SvO₂。',
+      indication: '<ul><li>不明原因休克鑑別診斷。</li><li>複雜心臟手術術後管理。</li><li>嚴重肺高壓或右心衰竭管理。</li></ul>',
+      contraindication: '<ul><li>右心內腫瘤或血栓。</li><li>三尖瓣或肺動脈瓣機械瓣膜。</li><li>嚴重 coagulopathy。</li></ul>',
+      complication: '<ul><li><b>肺動脈破裂</b> (高致死率)。</li><li>嚴重心律不整 (導管經過 RV 時)。</li><li>導管打結。</li><li>肺栓塞。</li></ul>',
+      care: '氣球充氣時間不可過久 (測完即放氣)，避免肺梗塞。每日檢視波形位置，避免導管自發性前進 (Migration) 導致永久嵌塞。'
+    }
   },
-
+  {
+    id: 'double',
+    title: 'Double-lumen (雙腔洗腎導管)',
+    short: 'Hemodialysis Catheter',
+    content: {
+      location: '短期：IJV, Femoral。<br>長期 (Perm-Cath)：經皮下隧道由 IJV 進入 SVC。',
+      function: '提供高流速 (200-300 ml/min 以上) 的體外循環通路，專供<b>血液透析 (Hemodialysis)</b> 或連續性腎臟替代療法 (CRRT) 使用。包含動脈端 (紅, 出) 與靜脈端 (藍, 入)。',
+      indication: '<ul><li>急性腎衰竭需緊急透析。</li><li>慢性腎衰竭但 AV Fistula 尚未成熟或無法建立。</li></ul>',
+      contraindication: '<ul><li>同 CVC 禁忌症。</li><li>上腔靜脈症候群 (SVC syndrome)。</li></ul>',
+      complication: '<ul><li>導管阻塞 (血栓)。</li><li>導管相關感染 (CRBSI) — 洗腎導管感染風險極高。</li><li>血管狹窄 (長期置放導致)。</li></ul>',
+      care: '<b>嚴禁</b>用於一般輸液或給藥 (除非救命急用)。依醫囑使用高濃度 Heparin 封管。換藥需嚴格無菌。'
+    }
+  },
   {
     id: 'hickman',
-    title: 'Hickman / Tunneled / Double-lumen',
-    short: '皮下隧道式長期中心導管，double-lumen 常用於同時給藥與抽血或透析',
-    content: `
-      <div class="section card">
-        <h4 class="h4">定義</h4>
-        <div class="meta">Hickman 為皮下隧道式中心靜脈導管，常用於長期化療、長期輸液；double-lumen 指導管有兩個腔以利同時使用。</div>
-      </div>
-
-      <div class="section card">
-        <h4 class="h4">優點與限制</h4>
-        <ul>
-          <li>優點：感染率較外露導管低、長期使用穩定</li>
-          <li>限制：需外科或介入置放、需嚴格無菌維護、活動受限</li>
-        </ul>
-      </div>
-
-      <div class="section card">
-        <h4 class="h4">護理重點</h4>
-        <ul>
-          <li>定期換敷料、正確 flush（heparin 或 NS）、觀察隧道處紅腫或滲液。</li>
-        </ul>
-      </div>
-    `
+    title: 'Hickman / Tunneled CVC',
+    short: 'Long-term CVC',
+    content: {
+      location: '由鎖骨下或頸靜脈進入，但在胸壁皮下建立一段<b>皮下隧道 (Tunnel)</b>，出口位於前胸壁。尖端位於 SVC。',
+      function: '皮下隧道內的 Dacron cuff 可促進組織生長固定並阻擋細菌，適合<b>長期使用</b> (數月至年)。用於化療、全靜脈營養 (TPN)、抗生素。',
+      indication: '需要長期頻繁靜脈注射，但預期不需要永久性 Port-A 或不適合做 Port-A 者 (如需每日 TPN)。',
+      contraindication: '嚴重敗血症、凝血異常。',
+      complication: '感染、導管斷裂、血栓。',
+      care: '觀察隧道路徑 (Tunnel tract) 有無紅腫壓痛。定期沖洗防阻塞。'
+    }
   },
-
   {
     id: 'picc',
-    title: 'PICC（外周置入中心靜脈導管）',
-    short: '手臂置入、尖端停 SVC，適合中長期輸注與居家護理',
-    content: `
-      <div class="section card">
-        <h4 class="h4">何時選 PICC</h4>
-        <ul>
-          <li>需要中長期靜脈治療（> 1 週），TPN、長期抗生素、頻繁抽血或居家輸液。</li>
-        </ul>
-      </div>
-
-      <div class="section card">
-        <h4 class="h4">置放要點</h4>
-        <ul>
-          <li>常用靜脈：basilic > brachial > cephalic。</li>
-          <li>尖端定位：SVC 或 cavo-atrial junction，使用 X-ray 或 ECG-tip 確認。</li>
-        </ul>
-      </div>
-
-      <div class="section card">
-        <h4 class="h4">併發症</h4>
-        <ul>
-          <li>感染（CLABSI）、上肢 DVT、導管阻塞、尖端過低造成心律不整。</li>
-        </ul>
-      </div>
-
-      <div class="section card">
-        <h4 class="h4">護理/維護</h4>
-        <ul>
-          <li>每次使用前後 flush、定期敷料更換、注意管徑 kinking 與活動限制。</li>
-        </ul>
-      </div>
-    `
+    title: 'PICC (周邊置入中心靜脈導管)',
+    short: 'Peripherally Inserted',
+    content: {
+      location: '由上臂的<b>貴要靜脈 (Basilic)</b>、肱靜脈或頭靜脈穿刺，尖端沿血管行走到 SVC。',
+      function: '同 CVC 功能，但由周邊置入，風險較低（無氣胸風險），可留置數週至數月。適合中長期治療。',
+      indication: '<ul><li>抗生素治療 > 1 週。</li><li>需 TPN 或化療但無須長期植入 Port-A。</li><li>周邊血管條件極差者。</li></ul>',
+      contraindication: '<ul><li>患側手臂有 AV fistula (洗腎廔管)。</li><li>患側曾接受乳房切除併淋巴廓清 (避免淋巴水腫)。</li></ul>',
+      complication: '<ul><li>靜脈炎 (Phlebitis)。</li><li>導管移位。</li><li>上肢深部靜脈栓塞 (DVT)。</li></ul>',
+      care: '嚴禁在置管側手臂量血壓或抽血。每週更換敷料。每日測量上臂圍（監測有無腫脹/DVT）。'
+    }
   },
-
   {
     id: 'porta',
-    title: 'Port-A（植入式靜脈港 / Portacath）',
-    short: '皮下植入腔室，長期化療或需要反覆靜脈通路患者首選',
-    content: `
-      <div class="section card">
-        <h4 class="h4">定義</h4>
-        <div class="meta">Port-A 為皮下置入的靜脈腔室，使用 Huber 針穿刺取得通路，適合長期、週期性用藥（如化療）。</div>
-      </div>
-
-      <div class="section card">
-        <h4 class="h4">優點/缺點</h4>
-        <ul>
-          <li>優點：外觀佳、較低感染率、方便長期治療</li>
-          <li>缺點：要皮下穿刺、需手術植入/拆除、穿刺造成疼痛</li>
-        </ul>
-      </div>
-
-      <div class="section card">
-        <h4 class="h4">維護</h4>
-        <ul>
-          <li>使用後 flush 與 lock、未使用時定期 heparin lock（依院方 protocol）、穿刺使用 Huber 針。</li>
-        </ul>
-      </div>
-    `
+    title: 'Port-A (植入式靜脈港)',
+    short: 'Implantable Port',
+    content: {
+      location: '基座 (Portal) 埋於前胸皮下，導管經鎖骨下靜脈通往 SVC。<b>外觀無外露管路</b>。',
+      function: '專為<b>長期、間歇性</b>治療設計（如癌症化療）。需使用特殊無菌針頭 (Huber needle) 穿刺皮膚注入基座。',
+      indication: '長期化療患者。',
+      contraindication: '無法耐受手術、嚴重感染、凝血異常。',
+      complication: '<ul><li>注射座翻轉 (Flip)。</li><li>導管斷裂/脫落 (Catheter fracture)。</li><li>藥物外滲 (Extravasation) — 可能造成嚴重組織壞死。</li></ul>',
+      care: '必須使用 Huber needle (無削切針) 穿刺。治療結束後需使用 Heparin saline 充填。觸診確認基座穩定度。'
+    }
   }
 ];
 
-// --- helper: render menu and pages ---
+// --- Application Logic ---
 const menu = document.getElementById('menuList');
 const main = document.getElementById('mainContent');
 
+// 1. Build Menu & Pages
 pages.forEach((p, idx)=>{
-  // menu item
+  // Menu
   const li = document.createElement('li');
   li.innerHTML = `<a href="#${p.id}" data-id="${p.id}">${p.title}</a>`;
   menu.appendChild(li);
 
-  // page content
-  const page = document.createElement('article');
-  page.className = 'page';
-  page.id = 'page-'+p.id;
-  // build next/prev ids
+  // Page
   const prev = idx > 0 ? pages[idx-1].id : null;
   const next = idx < pages.length-1 ? pages[idx+1].id : null;
+  const diagramHTML = getDiagram(p.id);
 
-  page.innerHTML = `
-    <h2 class="h4">${p.title} <span class="badge">${p.short}</span></h2>
-    <div class="meta" style="margin-bottom:10px">版本：2025 • 臺灣臨床風格 • 繁體中文</div>
-    ${p.content}
+  const article = document.createElement('article');
+  article.className = 'page';
+  article.id = 'page-'+p.id;
+  article.innerHTML = `
+    <h2 style="margin-bottom:4px;font-size:24px">${p.title}</h2>
+    <div style="color:var(--muted);margin-bottom:20px;font-weight:500">${p.short}</div>
+
+    <div class="diagram-box">
+      ${diagramHTML}
+      <div style="position:absolute;bottom:8px;right:12px;font-size:10px;color:rgba(0,0,0,0.3);pointer-events:none">Schematic Diagram</div>
+    </div>
+
+    <div class="col2">
+      <div class="card">
+        <div class="section-title">位置 (Location)</div>
+        <div class="text">${p.content.location}</div>
+      </div>
+      <div class="card">
+        <div class="section-title">作用 (Function)</div>
+        <div class="text">${p.content.function}</div>
+      </div>
+    </div>
+
+    <div class="card" style="border-left:4px solid var(--ok)">
+      <div class="section-title" style="color:var(--ok)">適應症 (Indications)</div>
+      <div class="text">${p.content.indication}</div>
+    </div>
+
+    <div class="col2">
+      <div class="card" style="border-left:4px solid var(--danger)">
+        <div class="section-title" style="color:var(--danger)">禁忌症 (Contraindications)</div>
+        <div class="text">${p.content.contraindication}</div>
+      </div>
+      <div class="card" style="border-left:4px solid var(--danger)">
+        <div class="section-title" style="color:var(--danger)">常見併發症 (Complications)</div>
+        <div class="text">${p.content.complication}</div>
+      </div>
+    </div>
+
+    <div class="card" style="background:var(--bg)">
+      <div class="section-title">護理重點 (Care & Maintenance)</div>
+      <div class="text">${p.content.care}</div>
+    </div>
+
     <div class="footerActions">
-      <button class="btn ghost small" data-prev="${prev}" ${prev ? '' : 'disabled'}>← 上一頁</button>
-      <div class="nextbtn" style="margin-left:auto;display:flex;gap:8px">
-        <button class="btn ghost small" id="copy-${p.id}">複製本頁文字</button>
-        <button class="btn small" data-next="${next}" ${next ? '' : 'disabled'}>下一頁 →</button>
+      <button class="btn ghost small" data-prev="${prev}" ${prev?'':'disabled'}>← 上一個</button>
+      <div style="margin-left:auto">
+        <button class="btn ghost small" onclick="copyContent('${p.id}')">複製內容</button>
+        <button class="btn small" data-next="${next}" ${next?'':'disabled'}>下一個 →</button>
       </div>
     </div>
   `;
-  main.appendChild(page);
+  main.appendChild(article);
 });
 
-// add comparison table page at end
-const compPage = document.createElement('article');
-compPage.className = 'page';
-compPage.id = 'page-compare';
-compPage.innerHTML = `
-  <h2 class="h4">相似管路比較表（快速對照）</h2>
-  <div class="compare card">
-    <table>
-      <thead><tr><th>項目</th><th>CVC</th><th>PICC</th><th>Hickman / Tunneled</th><th>Port-A</th><th>A-line</th></tr></thead>
-      <tbody>
-        <tr><td>置放位置</td><td>頸/鎖骨下/股</td><td>手臂（basilic）→ SVC</td><td>胸壁隧道至 SVC</td><td>皮下腔室 + 導管至 SVC</td><td>周邊動脈（radial, femoral）</td></tr>
-        <tr><td>主要用途</td><td>中心輸注、血透、監測</td><td>中長期輸注/居家輸液</td><td>長期輸注、化療</td><td>長期週期性靜脈通路（化療）</td><td>連續血壓監測、ABG</td></tr>
-        <tr><td>感染風險</td><td>中高</td><td>中</td><td>中低</td><td>低</td><td>低（非中心靜脈感染）</td></tr>
-        <tr><td>使用期間</td><td>短至中期</td><td>中長期（週→月）</td><td>長期（月→年）</td><td>長期（年）</td><td>短期/中期（依臨床）</td></tr>
-        <tr><td>是否適合家用</td><td>少</td><td>是（可）</td><td>較少</td><td>可（穿刺需護理）</td><td>否（監測裝置）</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <div style="margin-top:10px" class="callout">提示：選擇導管時，優先考量用藥特性（高滲/刺激性）、使用時間與病人活動需求。</div>
-  <div class="footerActions" style="margin-top:12px">
-    <button class="btn ghost small" data-prev="${pages[pages.length-1].id}">← 上一頁</button>
-    <button class="btn small" data-next="${pages[0].id}">回目錄首頁 →</button>
-  </div>
-`;
-main.appendChild(compPage);
+// 2. Navigation Logic
+const showPage = (id) => {
+  document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('#menuList a').forEach(el => el.classList.remove('active'));
+  
+  const target = document.getElementById('page-'+id);
+  if(target) {
+    target.classList.add('active');
+    main.scrollTop = 0;
+  }
+  const link = document.querySelector(`#menuList a[data-id="${id}"]`);
+  if(link) link.classList.add('active');
+};
 
-// add event handlers for menu, navigation, copy, next/prev
-const menuLinks = document.querySelectorAll('#menuList a');
-const showPage = (id)=>{
-  document.querySelectorAll('.page').forEach(pp=> pp.classList.remove('active'));
-  document.querySelectorAll('#menuList a').forEach(a=> a.classList.remove('active'));
-  const el = document.getElementById('page-'+id);
-  if(el) el.classList.add('active');
-  const menuA = document.querySelector('#menuList a[data-id="'+id+'"]');
-  if(menuA) menuA.classList.add('active');
-  // scroll main to top
-  main.scrollTop = 0;
-}
-menuLinks.forEach(a=>{
-  a.addEventListener('click', (e)=>{
+// Event Delegation
+document.body.addEventListener('click', (e) => {
+  // Menu Click
+  if(e.target.matches('#menuList a')) {
     e.preventDefault();
-    const id = a.getAttribute('data-id');
+    const id = e.target.dataset.id;
     showPage(id);
     location.hash = id;
-  });
-});
-
-// wire next/prev buttons (delegation)
-main.addEventListener('click', (e)=>{
-  const tgt = e.target;
-  if(tgt.matches('button[data-next]')){
-    const next = tgt.getAttribute('data-next');
-    if(next){ showPage(next); location.hash = next; }
-  } else if(tgt.matches('button[data-prev]')){
-    const prev = tgt.getAttribute('data-prev');
-    if(prev){ showPage(prev); location.hash = prev; }
-  } else if(tgt.id && tgt.id.startsWith('copy-')){
-    const id = tgt.id.replace('copy-','');
-    const pageEl = document.getElementById('page-'+id);
-    if(pageEl){
-      const txt = pageEl.innerText;
-      navigator.clipboard?.writeText(txt).then(()=> {
-        tgt.innerText = '已複製'; setTimeout(()=> tgt.innerText = '複製本頁文字',1200);
-      }).catch(()=> alert('複製失敗，請手動選取文字'));
-    }
+  }
+  // Next/Prev Buttons
+  if(e.target.matches('[data-next]')) {
+    const id = e.target.dataset.next;
+    if(id) { showPage(id); location.hash = id; }
+  }
+  if(e.target.matches('[data-prev]')) {
+    const id = e.target.dataset.prev;
+    if(id) { showPage(id); location.hash = id; }
   }
 });
 
-// menu filter
+// Search Logic
 document.getElementById('menuFilter').addEventListener('input', (e)=>{
-  const v = e.target.value.trim().toLowerCase();
-  document.querySelectorAll('#menuList li').forEach(li=>{
-    const a = li.querySelector('a');
-    li.style.display = (a.innerText.toLowerCase().includes(v) ? '' : 'none');
+  const term = e.target.value.toLowerCase();
+  document.querySelectorAll('#menuList li').forEach(li => {
+    const txt = li.innerText.toLowerCase();
+    li.style.display = txt.includes(term) ? '' : 'none';
   });
 });
 
-// global search inside pages
 document.getElementById('globalSearch').addEventListener('input', (e)=>{
-  const v = e.target.value.trim().toLowerCase();
-  document.querySelectorAll('.page').forEach(pg=>{
-    const text = pg.innerText.toLowerCase();
-    pg.style.display = text.includes(v) ? '' : 'none';
+  const term = e.target.value.toLowerCase();
+  pages.forEach(p => {
+    const el = document.getElementById('page-'+p.id);
+    const raw = el.innerText.toLowerCase();
+    const link = document.querySelector(`a[data-id="${p.id}"]`).parentElement;
+    
+    // Simple filter: hide pages that don't match, highlight menu
+    if(term === '') {
+       link.style.opacity = '1';
+    } else {
+       link.style.opacity = raw.includes(term) ? '1' : '0.3';
+    }
   });
-  // also hide nav links that don't match
-  document.querySelectorAll('#menuList a').forEach(a=>{
-    const id = a.getAttribute('data-id');
-    const pg = document.getElementById('page-'+id);
-    a.parentElement.style.display = (pg && pg.style.display !== 'none') ? '' : 'none';
-  });
 });
 
-// copy all pages as txt
-document.getElementById('exportBtn').addEventListener('click', ()=>{
-  const all = Array.from(document.querySelectorAll('.page')).map(p=> p.querySelector('h2')?.innerText + "\n\n" + p.innerText).join("\n\n====================\n\n");
-  const blob = new Blob([all], {type:'text/plain;charset=utf-8'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url; a.download = 'clinical_devices_full_notes.txt'; a.click();
-  URL.revokeObjectURL(url);
-});
-
-// print
-document.getElementById('printBtn').addEventListener('click', ()=> window.print());
-
-// theme toggle
-document.getElementById('toggleTheme').addEventListener('click', ()=>{
-  if(document.documentElement.hasAttribute('data-theme')) document.documentElement.removeAttribute('data-theme');
-  else document.documentElement.setAttribute('data-theme','dark');
-});
-
-// on load: if hash present show that page; else show first
-const initial = location.hash ? location.hash.replace('#','') : pages[0].id;
-if(document.querySelector('#menuList a[data-id="'+initial+'"]')) {
-  showPage(initial);
-} else {
-  showPage(pages[0].id);
+// Tools
+function copyContent(id) {
+  const el = document.getElementById('page-'+id);
+  const text = el.innerText;
+  navigator.clipboard.writeText(text).then(()=>alert('已複製文字'));
 }
-// also add compare page link at end of menu
-const li = document.createElement('li');
-li.innerHTML = `<a href="#compare" data-id="compare">相似管路比較表</a>`;
-menu.appendChild(li);
-document.querySelector('#menuList a[data-id="compare"]').addEventListener('click', (e)=>{
-  e.preventDefault(); showPage('compare'); location.hash = 'compare';
+
+document.getElementById('toggleTheme').addEventListener('click', ()=>{
+  const html = document.documentElement;
+  if(html.hasAttribute('data-theme')) html.removeAttribute('data-theme');
+  else html.setAttribute('data-theme', 'dark');
+});
+document.getElementById('printBtn').addEventListener('click', ()=>window.print());
+document.getElementById('exportBtn').addEventListener('click', ()=>{
+  let txt = "";
+  pages.forEach(p => {
+    const el = document.getElementById('page-'+p.id);
+    txt += `=== ${p.title} ===\n${el.innerText}\n\n`;
+  });
+  const blob = new Blob([txt], {type:'text/plain'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download="Medical_Devices_Note.txt"; a.click();
 });
 
-// keyboard navigation (left/right for prev/next)
+// Init
+const hash = location.hash.replace('#','');
+showPage(hash || pages[0].id);
+
+// Keyboard
 document.addEventListener('keydown', (e)=>{
-  if(e.key === 'ArrowLeft' || e.key === 'ArrowRight'){
-    const visible = document.querySelector('.page.active');
-    if(!visible) return;
-    // find its index
-    const id = visible.id.replace('page-','');
-    const idx = pages.findIndex(p=> p.id === id);
-    if(e.key === 'ArrowLeft' && idx > 0) { showPage(pages[idx-1].id); location.hash = pages[idx-1].id; }
-    if(e.key === 'ArrowRight' && idx < pages.length-1) { showPage(pages[idx+1].id); location.hash = pages[idx+1].id; }
-    // support compare page navigation
-    if(e.key === 'ArrowRight' && idx === pages.length-1) { showPage('compare'); location.hash='compare'; }
-    if(e.key === 'ArrowLeft' && id === 'compare') { showPage(pages[pages.length-1].id); location.hash = pages[pages.length-1].id; }
+  const active = document.querySelector('.page.active');
+  if(!active) return;
+  const id = active.id.replace('page-','');
+  const idx = pages.findIndex(p => p.id === id);
+  
+  if(e.key === 'ArrowRight' && idx < pages.length -1) {
+    const next = pages[idx+1].id;
+    showPage(next); location.hash = next;
+  }
+  if(e.key === 'ArrowLeft' && idx > 0) {
+    const prev = pages[idx-1].id;
+    showPage(prev); location.hash = prev;
   }
 });
 </script>
